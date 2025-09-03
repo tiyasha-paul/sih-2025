@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Clone</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <button class="new-chat">+ New Chat</button>
+      <div class="sidebar-bottom">
+        <button id="toggle-theme">Dark Mode</button>
+        <button>Updates & FAQ</button>
+        <button>Log out</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Landing page -->
+      <section class="landing">
+        <h1>Project AQUA</h1>
+        <div class="cards">
+          <div class="card">
+            <h2>Examples</h2>
+            <p>"Explain quantum computing in simple terms"</p>
+            <p>"Got any creative ideas for a 10 year old's birthday?"</p>
+            <p>"How do I make an HTTP request in JavaScript?"</p>
+          </div>
+          <div class="card">
+            <h2>Capabilities</h2>
+            <p>Remembers what user said earlier in the conversation</p>
+            <p>Allows user to provide follow-up corrections</p>
+            <p>Trained to decline inappropriate requests</p>
+          </div>
+          <div class="card">
+            <h2>Limitations</h2>
+            <p>May occasionally generate incorrect information</p>
+            <p>May occasionally produce biased content</p>
+            <p>Limited knowledge after 2021</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Chat Messages -->
+      <!-- <div class="chat-window"></div> -->
+
+      <!-- Chat Input -->
+      <div class="chat-input">
+        <select id="mode">
+          <option>Auto</option>
+          <option>Expert</option>
+          <option>Superfast</option>
+        </select>
+        <select id="language">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी</option>
+          <option value="bn">বাংলা</option>
+          <option value="ta">தமிழ்</option>
+          <option value="te">తెలుగు</option>
+        </select>
+        <input type="text" placeholder="Ask your question">
+        <button id="send">➤</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
