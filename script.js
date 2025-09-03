@@ -1,5 +1,5 @@
 // Dark mode toggle
-const darkToggle = document.getElementById("darkToggle");
+const darkToggle = document.getElementById("toggle-theme");
 if (darkToggle) {
   if (localStorage.getItem("darkMode") === "true") {
     document.body.classList.add("dark");
