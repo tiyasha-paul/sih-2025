@@ -67,6 +67,7 @@ body.dark {
 .auth-box h2 { margin-bottom: 20px; }
 .auth-box input { width: 100%; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
 .auth-box .btn { width: 100%; }
+.auth-box p a{text-decoration: none; color:#626060}
 
 /* Chat Layout */
 .cards{ margin-top: 20px; display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin-right: 50px; margin-left: 50px;}
@@ -89,9 +90,18 @@ body.dark {
 .chat-input select, .chat-input input { background-color: rgb(190, 187, 187); outline: none; border: 1px solid transparent; border-radius: 20px; color: #000000;}
 .chat-input input::placeholder{ color: rgb(90, 88, 88);} 
 
+/* Divider */
+.divider { display: flex; align-items: center; text-align: center; margin: 15px 0; }
+.divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid #444; }
+.divider:not(:empty)::before { margin-right: .75em; }
+.divider:not(:empty)::after { margin-left: .75em; }
+.divider span { font-size: 12px; color: rgb(112, 111, 111); }
+
 /* Buttons */
 .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; text-align: center; }
 .btn.primary { background: var(--primary); color: #fff; }
 .btn.secondary { background: var(--secondary); color: #fff; }
 .btn.small { font-size: 14px; padding: 8px 12px; background: var(--primary); color: #fff; border: none; cursor: pointer; }
 .sidebar button, #send{ outline: none; border: 1px solid transparent; border-radius: 8px; background: var(--input-bg); padding: 10px 14px; cursor: pointer; font-size: 14px; color: var(--text); }
+.btn.google{ display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #444; border: 1px solid #ccc; border-radius: 8px; padding: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-bottom: 15px;}
+.btn.google img{ width: 20px; height: 20px}
