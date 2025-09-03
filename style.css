@@ -27,8 +27,8 @@ body {
 }
 
 /* Navbar */
-.navbar{ display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--input-bg); }
-.navbar h1{ font-size: 20px; color: rgb(205, 196, 196);}
+.navbar{ display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--input-bg); }
+.navbar h1{ font-size: 20px; color: rgb(153, 147, 147);}
 .navbar a{ text-decoration: none; color: var(--text); font-size: 14px;}
 
 /* Theme Variables */
@@ -87,7 +87,7 @@ body.dark {
 .chat-input select, .chat-input input, .chat-input button { padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
 .chat-input input { flex: 1; }
 .chat-input select, .chat-input input { background-color: rgb(190, 187, 187); outline: none; border: 1px solid transparent; border-radius: 20px; color: #000000;}
-.chat-input input::placeholder{ color: rgb(59, 58, 58);} 
+.chat-input input::placeholder{ color: rgb(90, 88, 88);} 
 
 /* Buttons */
 .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; text-align: center; }
