@@ -78,3 +78,13 @@ function addMessage(sender, text) {
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+// Sidebar hamburger toggle
+const hamburger = document.getElementById("hamburger");
+const sidebar = document.querySelector(".sidebar");
+
+if (hamburger && sidebar) {
+  hamburger.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
+  });
+}
