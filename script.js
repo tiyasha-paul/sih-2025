@@ -1,12 +1,54 @@
 // Dark mode toggle
+function setInitialButtonText(btn, isDark) {
+  if (!btn) return;
+  btn.textContent = isDark ? "Light Mode" : "Dark Mode";
+}
+
 const darkToggle = document.getElementById("toggle-theme");
 if (darkToggle) {
-  if (localStorage.getItem("darkMode") === "true") {
+  const darkMode = localStorage.getItem("darkMode");
+  if (darkMode === "true") {
     document.body.classList.add("dark");
+    setInitialButtonText(darkToggle, true);
   }
+  else if (darkMode === "false"){
+    document.body.classList.remove("dark");
+    setInitialButtonText(darkToggle, false);
+  }
+  else{
+    document.body.classList.add("dark");
+    setInitialButtonText(darkToggle, true);
+  }
+
   darkToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("darkMode", isDark);
+    darkToggle.textContent = isDark ? "Light Mode" : "Dark Mode";
+  });
+}
+
+const darkModeChat = document.getElementById("darkToggle");
+if (darkModeChat) {
+  const darkMode = localStorage.getItem("darkMode");
+  if (darkMode === "true") {
+    document.body.classList.add("dark");
+    setInitialButtonText(darkModeChat, true);
+  }
+  else if(darkMode === "false") {
+    document.body.classList.remove("dark");
+    setInitialButtonText(darkModeChat, false);
+  }
+  else{
+    document.body.classList.add("dark");
+    setInitialButtonText(darkModeChat, true);
+  }
+
+  darkModeChat.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("darkMode", isDark);
+    darkModeChat.textContent = isDark ? "Light Mode" : "Dark Mode";
   });
 }
 
