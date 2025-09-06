@@ -33,17 +33,19 @@ body {
 
 /* Theme Variables */
 :root {
-  --bg: #f9f9f9;
-  --text: #222;
-  --primary: #10a37f;
-  --secondary: #555;
-  --input-bg: #fff;
+  --bg: #e0f7fa;         
+  --text: #004d40;      
+  --primary: #00796b;    
+  --secondary: #555;     
+  --input-bg: #ffffff;
 }
 
 body.dark {
-  --bg: #1e1e1e;
-  --text: #eee;
-  --input-bg: #2c2c2c;
+  --bg: #004d40;         
+  --text: #e0f7fa;       
+  --primary: #00acc1;    
+  --secondary: #888;    
+  --input-bg: #00695c;
 }
 
 /* Landing */
@@ -108,8 +110,12 @@ body.dark {
 /* Buttons */
 .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; text-align: center; }
 .btn.primary { background: var(--primary); color: #fff; }
+.btn.primary:hover { background: #004d40; }
 .btn.secondary { background: var(--secondary); color: #fff; }
 .btn.small { font-size: 14px; padding: 8px 12px; background: var(--primary); color: #fff; border: none; cursor: pointer; }
+.btn.small:hover { background: #004d40; }
 .sidebar button, #send{ outline: none; border: 1px solid transparent; border-radius: 8px; background: var(--input-bg); padding: 10px 14px; cursor: pointer; font-size: 14px; color: var(--text); }
+.sidebar button:hover { background: rgba(0, 121, 107, 0.1); }
 .btn.google{ display: flex; align-items: center; justify-content: center; gap: 10px; background: #fff; color: #444; border: 1px solid #ccc; border-radius: 8px; padding: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-bottom: 15px;}
+.btn.google:hover { background: #b2ebf2; }
 .btn.google img{ width: 20px; height: 20px}
