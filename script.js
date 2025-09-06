@@ -88,3 +88,13 @@ if (hamburger && sidebar) {
     sidebar.classList.toggle("collapsed");
   });
 }
+
+// index.html sidebar toggle
+const indexHamburger = document.getElementById("hamburger");
+const indexSidebar = document.querySelector(".index-sidebar");
+
+if (indexHamburger && indexSidebar) {
+  indexHamburger.addEventListener("click", () => {
+    indexSidebar.classList.toggle("collapsed");
+  });
+}
