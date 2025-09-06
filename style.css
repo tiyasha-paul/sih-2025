@@ -43,13 +43,13 @@ body {
 }
 
 body.dark {
-  --bg: #3e2f24;       
-  --text: #e3dccb;     
-  --primary: #a3c9a8;  
-  --secondary: #7d5a50;
-  --input-bg: #4b3f2f; 
-  --border: #5c4b3c;   
-  --hover: #5c4b3c;
+  --bg: #20170e;        
+  --text: #e8dfcb;      
+  --primary: #6e5f4d;   
+  --secondary: #32281e; 
+  --input-bg: #2b2015;   
+  --border: #392817aa;    
+  --hover: #5a4733;
 }
 
 /* Landing */
