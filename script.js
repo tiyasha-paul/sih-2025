@@ -57,7 +57,49 @@ const sendBtn = document.getElementById("sendBtn");
 const userInput = document.getElementById("userInput");
 const chatMessages = document.getElementById("chatMessages");
 
+// Handle New Chat button to start a fresh chat
+const newChatBtn = document.getElementById("newChat");
+if (newChatBtn && chatMessages) {
+  newChatBtn.addEventListener("click", () => {
+    localStorage.removeItem("chatData"); 
+    chatMessages.innerHTML = "";       
+    addMessage("bot", "Hello! How can I help you today?"); 
+  });
+}
+
+// Function to save chat to localStorage
+function saveChat() {
+  const messages = [];
+  document.querySelectorAll(".chat-messages .message").forEach(msg => {
+    messages.push({ sender: msg.classList.contains("user") ? "user" : "bot", text: msg.textContent });
+  });
+  localStorage.setItem("chatData", JSON.stringify(messages));
+}
+
+// Function to load chat from localStorage
+function loadChat() {
+  const data = localStorage.getItem("chatData");
+  if (data) {
+    const messages = JSON.parse(data);
+    messages.forEach(msg => {
+      addMessage(msg.sender, msg.text);
+    });
+  } else {
+    addMessage("bot", "Hello! How can I help you today?");
+  }
+}
+
+function addMessage(sender, text) {
+  const div = document.createElement("div");
+  div.className = `message ${sender}`;
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  saveChat();
+}
+
 if (sendBtn && userInput && chatMessages) {
+  loadChat();
   sendBtn.addEventListener("click", () => {
     const text = userInput.value.trim();
     if (!text) return;
@@ -88,15 +130,14 @@ if (sendBtn && userInput && chatMessages) {
       sendBtn.click();    
     }
   });
-
 }
 
-function addMessage(sender, text) {
-  const div = document.createElement("div");
-  div.className = `message ${sender}`;
-  div.textContent = text;
-  chatMessages.appendChild(div);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+// Clear chat data when logging out so a new chat starts next time
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("chatData"); // Remove saved chat when logging out
+  });
 }
 
 // Sidebar hamburger toggle
