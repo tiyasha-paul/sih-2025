@@ -63,12 +63,32 @@ if (sendBtn && userInput && chatMessages) {
     if (!text) return;
     addMessage("user", text);
     userInput.value = "";
-
-    // Fake bot reply
-    setTimeout(() => {
-      addMessage("bot", "You said: " + text);
-    }, 500);
+    
+    // Send message to backend (example using fetch)
+    fetch("/api/send-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+      // Optional: handle backend reply here
+      // addMessage("bot", data.reply);
+    })
+    .catch(err => {
+      console.error("Message send failed:", err);
+    });
   });
+
+    userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); 
+      sendBtn.click();    
+    }
+  });
+
 }
 
 function addMessage(sender, text) {
