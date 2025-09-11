@@ -1,3 +1,12 @@
+// Apply stored theme immediately on page load
+const darkMode = localStorage.getItem("darkMode");
+if (darkMode === "true") {
+  document.body.classList.add("dark");
+} else if (darkMode === "false") {
+  document.body.classList.remove("dark");
+}
+
+
 // Dark mode toggle
 function setInitialButtonText(btn, isDark) {
   if (!btn) return;
