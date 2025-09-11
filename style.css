@@ -278,6 +278,7 @@ body.dark {
   border-radius: 12px;
   width: 300px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
 .auth-box h2 {
@@ -520,4 +521,94 @@ body.dark {
 
 .index-sidebar.collapsed .sidebar-header-landing > *:not(#hamburger) {
   display: none;
+}
+
+/* --- RESPONSIVE DESIGN FOR LANDING & AUTH PAGES --- */
+
+/* For Tablets and Smaller Laptops (up to 1024px) */
+@media (max-width: 1024px) {
+  .landing-navbar,
+  .hero-section,
+  .feature-cards {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+}
+
+/* For Tablets (up to 768px) */
+@media (max-width: 768px) {
+  /* == Landing Page == */
+  .landing-navbar,
+  .hero-section,
+  .feature-cards {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .landing-navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .hero-section {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .hero-text, .hero-video {
+    max-width: 100%;
+  }
+
+  .hero-text .heading {
+    font-size: 32px;
+  }
+  
+  .feature-cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .card {
+    min-width: unset;
+    width: 90%;
+  }
+  
+  /* == Auth Pages == */
+  .auth-box {
+    width: 90%;
+    max-width: 400px;
+  }
+}
+
+/* For Mobile Phones (up to 480px) */
+@media (max-width: 480px) {
+  /* == Landing Page == */
+  .landing-navbar .logo-text {
+    font-size: 24px;
+  }
+  
+  .landing-navbar .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .hero-text .heading {
+    font-size: 28px;
+  }
+
+  .hero-text .description {
+    font-size: 16px;
+  }
+
+  .card {
+    width: 100%;
+  }
+  
+  .features-section h2 {
+    font-size: 24px;
+  }
 }
