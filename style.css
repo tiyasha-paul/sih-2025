@@ -22,7 +22,7 @@ body {
 
 /* Theme Variables */
 :root {
-  --bg: #f2edda;
+  --bg: #f0e9ca;
   --text: #3a3023;
   --primary: #4b3e30;
   --secondary: #ffffff;
@@ -63,7 +63,6 @@ body.dark {
   align-items: center;
   padding: 15px 20px;
   background: var(--input-bg);
-  border-bottom: 1px solid var(--border);
 }
 
 .navbar h1 {
@@ -150,10 +149,11 @@ body.dark {
 
 .landing-navbar {
   display: flex;
+  gap: 15px;
   justify-content: space-between;
   align-items: center;
   background: var(--bg);
-  padding: 15px 30px;
+  padding: 15px 120px;
   border-bottom: none;
 }
 
@@ -184,9 +184,10 @@ body.dark {
 .hero-section {
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
   background: var(--bg);
   color: var(--text);
-  padding: 40px;
+  padding: 20px 120px;
   gap: 15px;
   justify-content: space-between;
   align-items: center;
@@ -196,13 +197,16 @@ body.dark {
   max-width: 45%;
 }
 
-.hero-text h1 {
-  font-size: 36px;
+.hero-text .heading {
+  font-size: 40px;
+  font-weight: 900;
   margin-bottom: 20px;
+  line-height: 1.4;
 }
 
-.hero-text p {
+.hero-text .description {
   font-size: 18px;
+  line-height: 1.6;
 }
 
 .hero-video {
@@ -216,9 +220,9 @@ body.dark {
 }
 
 .features-section {
-  background: var(--bg);
+  background: var(--input-bg);
   text-align: center;
-  padding: 10px 40px 40px 40px;
+  padding: 40px 0px 40px 0px;
 }
 
 .features-section h2 {
@@ -228,16 +232,18 @@ body.dark {
 
 .feature-cards {
   display: flex;
-  justify-content: space-around;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 0 120px;
+  flex-wrap: wrap;
 }
 
 .card {
-  background: var(--input-bg);
-  border: 3px solid var(--border);
+  background: var(--bg);
   border-radius: 12px;
   padding: 20px;
-  width: 100%;
+  min-width: 370px;
+  max-width: 100%;
   color: var(--text);
   text-align: center;
 }
@@ -251,7 +257,7 @@ body.dark {
 }
 
 .footer {
-  background: var(--input-bg);
+  background: var(--bg);
   text-align: center;
   padding: 15px;
   border-top: none;
