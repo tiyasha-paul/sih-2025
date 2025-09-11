@@ -149,13 +149,26 @@ body.dark {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--input-bg);
+  background: var(--bg);
   padding: 15px 30px;
   border-bottom: none;
 }
 
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+}
+
+.logo-img {
+  width: 60px; 
+  height: 60px;
+  object-fit: contain;
+  margin: 0;
+}
+
 .landing-navbar .logo-text {
-  font-size: 20px;
+  font-size: 30px;
   color: var(--primary);
   font-weight: 850;
 }
