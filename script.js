@@ -115,8 +115,8 @@ if (sendBtn && userInput && chatMessages) {
     addMessage("user", text);
     userInput.value = "";
     
-    // Send message to backend (example using fetch)
-    fetch("/api/send-message", {
+    // Send message to FastAPI backend
+    fetch("http://localhost:8000/api/send-message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -125,11 +125,17 @@ if (sendBtn && userInput && chatMessages) {
     })
     .then(res => res.json())
     .then(data => {
-      // Optional: handle backend reply here
-      // addMessage("bot", data.reply);
+      // Handle backend reply 
+      if (data.reply) {
+        addMessage("bot", data.reply);
+        saveChat(); // Save the updated chat
+      }
     })
     .catch(err => {
       console.error("Message send failed:", err);
+      // Add fallback message if backend is not available
+      addMessage("bot", "Sorry, I'm having trouble connecting to the chat service. Please make sure the FastAPI backend is running on port 8000.");
+      saveChat();
     });
   });
 

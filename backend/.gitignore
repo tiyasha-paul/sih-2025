@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (keep examples but exclude large trained models)
+chatbot_model/*.pkl
+chatbot_model/*.pt
+chatbot_model/*.bin
+chatbot_model/pytorch_model.bin
+chatbot_model/tf_model.h5
+chatbot_model/*.safetensors
+
+# Keep the README in chatbot_model
+!chatbot_model/README.md
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
