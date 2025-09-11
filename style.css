@@ -7,8 +7,11 @@
 }
 
 html, body {
-  height: 100%;
+  height: auto;
+  min-height: 100vh;
   width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body {
@@ -117,7 +120,7 @@ body.dark {
   justify-content: center;
   gap: 10px;
   background: #fff;
-  color: #444;
+  color: var(--text);
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
@@ -129,7 +132,8 @@ body.dark {
 
 .btn.google:hover {
   background: var(--hover);
-  border-color: var(--primary);
+  border-color: var(--hover);
+  color: var(--bg)
 }
 
 .btn.google img {
@@ -141,8 +145,7 @@ body.dark {
 .landing-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .landing-navbar {
@@ -280,14 +283,10 @@ body.dark {
   width: 100%;
   margin-bottom: 15px;
   padding: 10px;
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 8px;
   background: var(--bg);
   color: var(--text);
-}
-
-.auth-box input::placeholder {
-  color: var(--secondary);
 }
 
 .auth-box .btn {
@@ -296,9 +295,15 @@ body.dark {
 
 .auth-box p a {
   text-decoration: none;
+}
+
+.auth-box p{
   color: var(--primary);
 }
 
+.auth-box a{
+  color: var(--hover);
+}
 .divider {
   display: flex;
   align-items: center;
@@ -323,7 +328,7 @@ body.dark {
 
 .divider span {
   font-size: 12px;
-  color: var(--secondary);
+  color: var(--text);
 }
 
 /* Chat Layout */
