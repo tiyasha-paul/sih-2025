@@ -1,17 +1,31 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+// This is the main entry point for the HydroLens application
+// It starts both the Node.js and Python servers
 
-dotenv.config();
-connectDB();
+const { spawn } = require('child_process');
+const path = require('path');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+console.log('Starting HydroLens servers...');
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/chat', require('./routes/chat'));
+// Start Python FastAPI server for Google OAuth
+const pythonServer = spawn('python', ['-m', 'uvicorn', 'hydrolensBE.main:app', '--reload', '--host', '0.0.0.0', '--port', '8000'], {
+  cwd: __dirname,
+  stdio: 'inherit'
+});
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+pythonServer.on('error', (err) => {
+  console.error('Failed to start Python server:', err);
+});
+
+// Start Node.js Express server for main application
+const nodeServer = spawn('node', ['server/acc/script/server.js'], {
+  cwd: __dirname,
+  stdio: 'inherit'
+});
+
+nodeServer.on('error', (err) => {
+  console.error('Failed to start Node.js server:', err);
+});
+
+console.log('HydroLens servers started successfully!');
+console.log('- Node.js server: http://localhost:3000');
+console.log('- Python server: http://localhost:8000');

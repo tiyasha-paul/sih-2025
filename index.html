@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HydroLens</title>
   <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body class="dark">
   <div class="landing-container">
@@ -17,15 +18,15 @@
       
       <div class="nav-links">
         <button id="toggle-theme" class="btn small">Dark Mode</button>
-        <a href="#about" class="btn small">About</a>
-        <a href="#updates" class="btn small">Updates & FAQs</a>
+        <a href="comparison.html" target="_blank" class="btn small">About</a>
+        <a href="updates_faq.html" target="_blank" class="btn small">Updates & FAQs</a>
         <a href="signup.html" class="btn small">Sign Up/Login</a>
       </div>
     </nav>
 
     <section class="hero-section">
       <div class="hero-text">
-        <p class="heading">Welcome to HydroLens - A new lens into India's groundwater data</p>
+        <p class="heading">Welcome to HydroLens - A new Lens into India's groundwater data</p>
         <p class="description">HydroLens helps you explore and understand groundwater assessments with ease — bringing clarity to complex datasets from the INGRES portal. Check out the video on how to effectively use HydroLens!</p>
       </div>
       <div class="hero-video">
@@ -59,6 +60,56 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    // Performance Chart
+    const ctx1 = document.getElementById('performanceChart')?.getContext('2d');
+    if(ctx1) {
+      new Chart(ctx1, {
+          type: 'bar',
+          data: {
+              labels: ['HydroLens', 'ChatGPT', 'Google Bard'],
+              datasets: [{
+                  label: 'Overall Score',
+                  data: [95, 60, 55],
+                  backgroundColor: [
+                      '#d4af37',
+                      '#4285f4',
+                      '#34a853'
+                  ],
+                  borderColor: [
+                      '#b8941f',
+                      '#3367d6',
+                      '#2d8f44'
+                  ],
+                  borderWidth: 2,
+                  borderRadius: 8
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      display: false
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      max: 100,
+                      grid: {
+                          color: 'rgba(0,0,0,0.1)'
+                      }
+                  },
+                  x: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          }
+      });
+    }
+  </script>
 </body>
 </html>
-
+</create_file>

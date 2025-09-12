@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HydroLens Updates & FAQs</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ffd700;
+    }
+    .section {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      margin-top: 0;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ffd700;
+    }
+    .section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding-left: 10px;
+    }
+    .section-content.open {
+      max-height: 1000px; /* large enough to show content */
+      margin-top: 10px;
+    }
+    .toggle-icon {
+      font-weight: bold;
+      font-size: 24px;
+      line-height: 1;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    p, ul {
+      line-height: 1.5;
+    }
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>HydroLens Help Center</h1>
+  <div class="container" style="display:flex; gap:10px; justify-content:center;">
+    <div class="section" id="updatesSection" style="flex:1; background-color:#2f2f2f; border-radius:8px; padding:20px; cursor:pointer;" onclick="toggleSection('updatesContent')">
+      <h2 style="color:#ffd700; display:flex; justify-content:space-between; align-items:center;">
+        Updates
+        <span class="toggle-icon" id="updatesToggle">+</span>
+      </h2>
+      <div class="section-content" id="updatesContent" style="max-height:0; overflow:hidden; transition:max-height 0.3s ease; padding-left:10px;">
+        <p><strong>v1.0.0 (Initial Release):</strong> Launched HydroLens with AI-powered chat, Google OAuth authentication, and groundwater data exploration features.</p>
+        <p><strong>Recent Improvements:</strong> Enhanced error handling, JWT validation, chat history loading from MongoDB, and UI responsiveness.</p>
+      </div>
+    </div>
+
+    <div class="section" id="faqSection" style="flex:1; background-color:#2f2f2f; border-radius:8px; padding:20px; cursor:pointer;" onclick="toggleSection('faqContent')">
+      <h2 style="color:#ffd700; display:flex; justify-content:space-between; align-items:center;">
+        Frequently Asked Questions
+        <span class="toggle-icon" id="faqToggle">+</span>
+      </h2>
+      <div class="section-content" id="faqContent" style="max-height:0; overflow:hidden; transition:max-height 0.3s ease; padding-left:10px;">
+        <details>
+          <summary style="cursor:pointer; list-style:none; font-weight:bold; font-size:1.1em; display:flex; align-items:center;">
+            <span class="faq-toggle" style="margin-right:8px; font-weight:bold; font-size:1.5em;">+</span> What is HydroLens?
+          </summary>
+          <p>HydroLens is a comprehensive groundwater data exploration platform that provides AI-powered insights into India's groundwater resources using natural language queries.</p>
+        </details>
+        <details>
+          <summary style="cursor:pointer; list-style:none; font-weight:bold; font-size:1.1em; display:flex; align-items:center;">
+            <span class="faq-toggle" style="margin-right:8px; font-weight:bold; font-size:1.5em;">+</span> How do I install and run the application?
+          </summary>
+          <p>Follow the installation steps in the README: clone the repo, run <code>npm run setup</code>, configure environment variables, and start the servers with <code>npm run python-dev</code> and <code>npm run dev</code>.</p>
+        </details>
+        <details>
+          <summary style="cursor:pointer; list-style:none; font-weight:bold; font-size:1.1em; display:flex; align-items:center;">
+            <span class="faq-toggle" style="margin-right:8px; font-weight:bold; font-size:1.5em;">+</span> What are the main features?
+          </summary>
+          <ul style="list-style:none; padding-left:0;">
+            <li><span style="font-weight:bold; font-size:1.5em; margin-right:6px;">+</span> AI-powered chat for groundwater data queries</li>
+            <li><span style="font-weight:bold; font-size:1.5em; margin-right:6px;">+</span> Google OAuth authentication</li>
+            <li><span style="font-weight:bold; font-size:1.5em; margin-right:6px;">+</span> Multilingual support</li>
+            <li><span style="font-weight:bold; font-size:1.5em; margin-right:6px;">+</span> Real-time data visualization</li>
+            <li><span style="font-weight:bold; font-size:1.5em; margin-right:6px;">+</span> User management</li>
+          </ul>
+        </details>
+        <details>
+          <summary style="cursor:pointer; list-style:none; font-weight:bold; font-size:1.1em; display:flex; align-items:center;">
+            <span class="faq-toggle" style="margin-right:8px; font-weight:bold; font-size:1.5em;">+</span> What tech stack is used?
+          </summary>
+          <p>Frontend: HTML5, CSS3, JavaScript. Backend: Node.js/Express for auth and chat, FastAPI/Python for OAuth and APIs, MongoDB for data storage.</p>
+        </details>
+        <details>
+          <summary style="cursor:pointer; list-style:none; font-weight:bold; font-size:1.1em; display:flex; align-items:center;">
+            <span class="faq-toggle" style="margin-right:8px; font-weight:bold; font-size:1.5em;">+</span> How to contribute?
+          </summary>
+          <p>Fork the repository, create a feature branch, make changes, run tests, and submit a pull request.</p>
+        </details>
+      </div>
+    </div>
+
+    <div class="section" id="termsSection" style="flex:1; background-color:#2f2f2f; border-radius:8px; padding:20px; cursor:pointer;" onclick="toggleSection('termsContent')">
+      <h2 style="color:#ffd700; display:flex; justify-content:space-between; align-items:center;">
+        Terms & Condition
+        <span class="toggle-icon" id="termsToggle">+</span>
+      </h2>
+      <div class="section-content" id="termsContent" style="max-height:0; overflow:hidden; transition:max-height 0.3s ease; padding-left:10px;">
+        <p>This user manual provides guidance on how to use the HydroLens chatbot, privacy policies, and support information.</p>
+        <h3>Using the Chatbot</h3>
+        <p>Ask natural language questions about groundwater data. The chatbot supports multiple languages and provides AI-powered responses.</p>
+        <h3>Privacy</h3>
+        <p>User data is securely stored and managed. Authentication is handled via Google OAuth.</p>
+        <h3>Support</h3>
+        <p>For issues or questions, please contact the development team or create an issue in the repository.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSection(id) {
+      const content = document.getElementById(id);
+      const toggleIcon = document.getElementById(id.replace('Content', 'Toggle'));
+      if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        toggleIcon.textContent = '+';
+      } else {
+        // Close all sections except the one clicked
+        document.querySelectorAll('.section-content').forEach(section => {
+          if (section.id !== id) {
+            section.classList.remove('open');
+          }
+        });
+        document.querySelectorAll('.toggle-icon').forEach(icon => {
+          if (icon.id !== id.replace('Content', 'Toggle')) {
+            icon.textContent = '+';
+          }
+        });
+        // Toggle clicked section
+        content.classList.toggle('open');
+        toggleIcon.textContent = content.classList.contains('open') ? '-' : '+';
+      }
+    }
+  </script>
+  <footer style="text-align:center; margin-top: 20px; color: #888;">
+    &copy; 2025 HydroLens. All rights reserved.
+  </footer>
+</body>
+</html>
