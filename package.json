@@ -1,0 +1,39 @@
+{
+  "name": "hydrolens",
+  "version": "1.0.0",
+  "description": "HydroLens - A groundwater data exploration platform",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "start:prod": "NODE_ENV=production node src/server.js",
+    "dev": "nodemon src/server.js",
+    "python": "cd hydrolensBE && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "install-python": "cd hydrolensBE && pip install -r requirements.txt",
+    "setup": "npm install && npm run install-python",
+    "validate-setup": "node test-setup.js",
+    "test-servers": "echo 'Testing servers...' && npm run python & sleep 3 && npm run dev"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "google-auth-library": "^10.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "pm2": "^6.0.10"
+  },
+  "keywords": [
+    "hydrolens",
+    "groundwater",
+    "ai",
+    "chat"
+  ],
+  "author": "",
+  "license": "ISC"
+}
