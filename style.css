@@ -386,6 +386,11 @@ body.dark {
   color: var(--text);
 }
 
+.sidebar.collapsed #hamburger:hover {
+    background: var(--hover);
+    color: var(--input-bg);
+}
+
 .sidebar.collapsed .sidebar-header {
   width: 100%;
   justify-content: center;
@@ -428,6 +433,11 @@ body.dark {
   border: none;
   cursor: pointer;
   border-radius: 6px;
+}
+
+#hamburger:hover{
+  background: var(--hover);
+  color: var(--input-bg);
 }
 
 #newChat {
@@ -480,6 +490,8 @@ body.dark {
 .chat-input {
   display: flex;
   padding: 15px;
+  padding-bottom: 25px;
+  padding-left: 20px;
   gap: 10px;
   background: var(--bg);
   border-left: 0;
@@ -733,8 +745,9 @@ html, body {
 
   .sidebar.collapsed #hamburger{
     top: 20px;
-    left: 0;
+    left: 3px;
   }
+
   .sidebar:not(.collapsed) .sidebar-header {
     padding-left: 50px;
     padding-top: 6px;
