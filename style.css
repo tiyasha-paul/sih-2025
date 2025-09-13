@@ -339,19 +339,9 @@ body.dark {
 }
 
 /* Chat Layout */
-
-.chat-page html,
-.chat-page body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden; 
-}
-
-.chat-page .chat-container {
+.chat-container {
   display: flex;
-  min-height: 100vh;
-  width: 100%;
-  overflow: hidden;
+  height: 100vh;
 }
 
 .sidebar {
@@ -464,24 +454,16 @@ body.dark {
   background: var(--hover);
 }
 
-.chat-page .chat-main {
+.chat-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
-.chat-page .chat-messages {
+.chat-messages {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  max-height: calc(100% - 80px);
-}
-
-.chat-page .chat-container,
-.chat-page .chat-main,
-.chat-page .chat-messages {
-  overflow-x: hidden;
 }
 
 .message {
@@ -507,7 +489,6 @@ body.dark {
 
 .chat-input {
   display: flex;
-  flex-shrink: 0;
   padding: 15px;
   padding-bottom: 25px;
   padding-left: 20px;
@@ -595,7 +576,7 @@ body.dark {
   .hero-text .heading {
     font-size: 32px;
   }
-  
+
   .feature-cards {
     flex-direction: column;
     align-items: center;
@@ -606,7 +587,7 @@ body.dark {
     min-width: unset;
     width: 90%;
   }
-  
+
   /* == Auth Pages == */
   .auth-box {
     width: 90%;
@@ -620,7 +601,7 @@ body.dark {
   .landing-navbar .logo-text {
     font-size: 24px;
   }
-  
+
   .landing-navbar .nav-links {
     flex-wrap: wrap;
     justify-content: center;
@@ -638,7 +619,7 @@ body.dark {
   .card {
     width: 100%;
   }
-  
+
   .features-section h2 {
     font-size: 24px;
   }
@@ -702,14 +683,6 @@ html, body {
 
 /* Sidebar behavior for mobile */
 @media (max-width: 767px) {
-
-  .chat-page html,
-  .chat-page body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-  }
-
   .sidebar {
     width: 280px;
     position: fixed;
@@ -732,19 +705,10 @@ html, body {
     transform: translateX(-0%);
   }
 
-  .chat-page .chat-main {
+  .chat-main {
     margin-left: 0;
     width: 100%;
     transition: none;
-  }
-
-  .chat-page .chat-container {
-    height: 100%;
-  }
-
-  .chat-page .chat-messages {
-    overflow-y: auto;
-    max-height: calc(100% - 80px); /* Adjust to ensure the input section is always visible */
   }
 
   body::before {
@@ -791,7 +755,6 @@ html, body {
 
   .chat-input {
     flex-direction: row;
-    flex-shrink: 0;
     gap: 10px;
     align-items: center;
   }
@@ -809,35 +772,4 @@ html, body {
 .sidebar,
 .chat-main {
   transition: all 0.3s ease-in-out;
-}
-
-
-/* Specifically disable hover effects on touch devices */
-@media (hover: none) and (pointer: coarse) {
-  
-.btn.primary:hover {
-  background: var(--primary);
-  color: #fff;
-}
-
-.btn.small:hover {
-  background: var(--primary);
-  color: #fff;
-}
-  
-  .btn.google:hover {
-    background: var(--bg);
-    border-color: #ccc;
-    color: var(--text);
-  }
-
-  #newChat:hover {
-  background: var(--primary);
-  color: #fff;
-  }
-  
-  #hamburger:hover{
-    background: none;
-    color: var(--text);
-  }
 }
