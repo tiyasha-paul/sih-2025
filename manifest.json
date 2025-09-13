@@ -1,0 +1,21 @@
+{
+  "name": "HydroLens",
+  "short_name": "HydroLens",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1b130b",
+  "theme_color": "#6e5f4d",
+  "description": "A new Lens into India's groundwater data",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

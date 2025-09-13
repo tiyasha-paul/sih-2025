@@ -64,6 +64,7 @@ def create_flow():
 def login():
     flow = create_flow()
     auth_url, _ = flow.authorization_url(prompt='consent')
+    print(f"OAuth URL generated: {auth_url}")  # Add logging to verify the URL
     return RedirectResponse(auth_url)
 
 @router.get("/callback")
@@ -75,6 +76,6 @@ def callback(request: Request):
         id_token = credentials.id_token
         # You can verify the token here if needed
         # TODO: decode id_token and create session or JWT for frontend
-        return RedirectResponse(url="http://localhost:3000/chat.html")
+        return RedirectResponse(url="https://tiyasha-paul.github.io/sih-2025/chat.html")
     except Exception as e:
         return {"error": "Authentication failed", "details": str(e)}

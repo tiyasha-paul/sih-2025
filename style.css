@@ -612,3 +612,89 @@ body.dark {
     font-size: 24px;
   }
 }
+
+/*
+ RESPONSIVE CSS FOR TABLET & MOBILE (OVERLAY SIDEBAR)
+*/
+
+@media (max-width: 768px) {
+  /* On mobile, the sidebar becomes a true overlay */
+  .sidebar {
+    position: fixed;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1001; /* Ensure it's on top */
+  }
+  
+  .sidebar:not(.collapsed) {
+    transform: translateX(0);
+    width: 280px; /* A fixed width for the open menu */
+    padding: 20px;
+    align-items: initial;
+  }
+  
+  /* The collapsed class hides the sidebar off-screen */
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+  
+  /* Reset any desktop margin to make the main content full-width */
+  .chat-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Make the hamburger icon always visible on mobile */
+  #hamburger {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1002; /* Above the sidebar and backdrop */
+    background: var(--input-bg);
+    display: block;
+  }
+  
+  /* Add padding to the header content to avoid the fixed hamburger */
+  .sidebar:not(.collapsed) .sidebar-header {
+    padding-left: 50px;
+  }
+  
+  /* Mobile backdrop for the overlay menu */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* Show the backdrop when the sidebar is open */
+  body:has(.sidebar:not(.collapsed))::before {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Adjustments for smaller mobile phones */
+@media (max-width: 480px) {
+  .chat-input-container { 
+    padding: 10px 15px; 
+  }
+  
+  .message { 
+    max-width: 90%; 
+  }
+
+  .chat-input {
+    flex-direction: column;
+    padding: 10px;
+    gap: 8px;
+  }
+}

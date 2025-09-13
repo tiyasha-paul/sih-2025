@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>HydroLens</title>
   <link rel="stylesheet" href="./style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#6e5f4d" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body class="dark">
@@ -39,16 +44,16 @@
       <h2>Features</h2>
       <div class="feature-cards">
         <div class="card">
-          <h3>Instant Access</h3>
-          <p>Find groundwater information whenever you need it.</p>
+          <h3>Simplified data</h3>
+          <p>Query groundwater data without navigating complex datasets.</p>
         </div>
         <div class="card">
-          <h3>AI Assistance</h3>
-          <p>Ask natural questions and get smart responses.</p>
+          <h3>Instant Access</h3>
+          <p>Get effective and immediate responses.</p>
         </div>
         <div class="card">
           <h3>Multilingual Support</h3>
-          <p>Interact in different languages easily.</p>
+          <p>Ask queries and receive responses in various languages.</p>
         </div>
       </div>
     </section>
@@ -61,6 +66,16 @@
 
   <script src="script.js"></script>
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch(error => {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+      });
+    }
+
     // Performance Chart
     const ctx1 = document.getElementById('performanceChart')?.getContext('2d');
     if(ctx1) {
