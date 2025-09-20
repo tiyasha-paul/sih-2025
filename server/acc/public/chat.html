@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydroLens</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="dark">
+  <div class="chat-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class = "sidebar-header">
+        <button id="hamburger" class="btn small">☰</button>
+        <span class="logo-text">HydroLens</span>
+      </div>
+      <button id="newChat" class="btn small">+ New Chat</button>
+      <div class="sidebar-bottom">
+        <button class="btn small" id="darkToggle"></button>
+        <a href="index.html" class="btn small" id="logoutBtn">Logout</a>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <main class="chat-main">
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <!-- Chat Input -->
+      <div class="chat-input">
+        <select id="modeSelect">
+          <option>Auto</option>
+          <option>Expert</option>
+          <option>Superfast</option>
+        </select>
+        <select id="langSelect">
+          <option>English</option>
+          <option>हिन्दी</option>
+          <option>বাংলা</option>
+          <option>தமிழ்</option>
+          <option>తెలుగు</option>
+        </select>
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button id="micBtn" title="Voice Input" aria-label="Start voice input">🎤</button>
+        <button id="sendBtn">➤</button>
+      </div>
+    </main>
+  </div>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -160,11 +160,11 @@ body.dark {
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 5px; 
+  gap: 5px;
 }
 
 .logo-img {
-  width: 60px; 
+  width: 60px;
   height: 60px;
   object-fit: contain;
   margin: 0;
@@ -512,6 +512,49 @@ body.dark {
   background: var(--hover);
 }
 
+/* Microphone button specific styling */
+#micBtn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  min-width: 45px;
+  transition: all 0.3s ease;
+}
+
+#micBtn:hover {
+  background: var(--hover);
+  transform: scale(1.05);
+}
+
+#micBtn:active {
+  transform: scale(0.95);
+}
+
+#micBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#micBtn.recording {
+  background: #ff4444;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Index Sidebar Toggle (Optional if you implement it later) */
 .index-sidebar.collapsed {
   width: 60px;
@@ -564,7 +607,7 @@ body.dark {
   .hero-text .heading {
     font-size: 32px;
   }
-  
+
   .feature-cards {
     flex-direction: column;
     align-items: center;
@@ -575,7 +618,7 @@ body.dark {
     min-width: unset;
     width: 90%;
   }
-  
+
   /* == Auth Pages == */
   .auth-box {
     width: 90%;
@@ -589,7 +632,7 @@ body.dark {
   .landing-navbar .logo-text {
     font-size: 24px;
   }
-  
+
   .landing-navbar .nav-links {
     flex-wrap: wrap;
     justify-content: center;
@@ -607,7 +650,7 @@ body.dark {
   .card {
     width: 100%;
   }
-  
+
   .features-section h2 {
     font-size: 24px;
   }
@@ -625,20 +668,20 @@ body.dark {
     transition: transform 0.3s ease-in-out;
     z-index: 1001; /* Ensure it's on top */
   }
-  
+
   .sidebar:not(.collapsed) {
     transform: translateX(0);
     width: 280px; /* A fixed width for the open menu */
     padding: 20px;
     align-items: initial;
   }
-  
+
   /* The collapsed class hides the sidebar off-screen */
   .sidebar.collapsed {
     transform: translateX(-100%);
     box-shadow: none;
   }
-  
+
   /* Reset any desktop margin to make the main content full-width */
   .chat-main {
     margin-left: 0 !important;
@@ -654,12 +697,12 @@ body.dark {
     background: var(--input-bg);
     display: block;
   }
-  
+
   /* Add padding to the header content to avoid the fixed hamburger */
   .sidebar:not(.collapsed) .sidebar-header {
     padding-left: 50px;
   }
-  
+
   /* Mobile backdrop for the overlay menu */
   body::before {
     content: '';
@@ -684,12 +727,12 @@ body.dark {
 
 /* Adjustments for smaller mobile phones */
 @media (max-width: 480px) {
-  .chat-input-container { 
-    padding: 10px 15px; 
+  .chat-input-container {
+    padding: 10px 15px;
   }
-  
-  .message { 
-    max-width: 90%; 
+
+  .message {
+    max-width: 90%;
   }
 
   .chat-input {

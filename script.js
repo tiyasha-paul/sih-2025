@@ -96,9 +96,9 @@ const chatMessages = document.getElementById("chatMessages");
 const newChatBtn = document.getElementById("newChat");
 if (newChatBtn && chatMessages) {
   newChatBtn.addEventListener("click", () => {
-    localStorage.removeItem("chatData"); 
-    chatMessages.innerHTML = "";       
-    addMessage("bot", "Hello! How can I help you today?"); 
+    localStorage.removeItem("chatData");
+    chatMessages.innerHTML = "";
+    addMessage("bot", "Hello! How can I help you today?");
   });
 }
 
@@ -215,8 +215,8 @@ if (sendBtn && userInput && chatMessages) {
 
     userInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); 
-      sendBtn.click();    
+      e.preventDefault();
+      sendBtn.click();
     }
   });
 }
@@ -259,4 +259,118 @@ if (googleBtn) {
 // Function to show updates message
 function showUpdatesMessage() {
   alert('Will bring more updates soon..');
+}
+
+// Speech Recognition functionality
+let recognition = null;
+let isListening = false;
+
+const micBtn = document.getElementById("micBtn");
+
+if (micBtn && userInput) {
+  // Check if browser supports Web Speech API
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+
+    // Configure recognition
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US'; // Default language
+
+    // Update language based on language selector
+    const langSelect = document.getElementById("langSelect");
+    if (langSelect) {
+      langSelect.addEventListener("change", () => {
+        const selectedLang = langSelect.value;
+        const langMap = {
+          'English': 'en-US',
+          'हिन्दी': 'hi-IN',
+          'বাংলা': 'bn-IN',
+          'தமிழ்': 'ta-IN',
+          'తెలుగు': 'te-IN'
+        };
+        recognition.lang = langMap[selectedLang] || 'en-US';
+      });
+
+      // Set initial language
+      const initialLang = langSelect.value;
+      const langMap = {
+        'English': 'en-US',
+        'हिन्दी': 'hi-IN',
+        'বাংলা': 'bn-IN',
+        'தமிழ்': 'ta-IN',
+        'తెలుగు': 'te-IN'
+      };
+      recognition.lang = langMap[initialLang] || 'en-US';
+    }
+
+    // Handle speech recognition events
+    recognition.onstart = () => {
+      isListening = true;
+      micBtn.textContent = '🎤';
+      micBtn.style.background = 'var(--hover)';
+      micBtn.title = 'Listening... Click to stop';
+    };
+
+    recognition.onresult = (event) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      // Show interim results
+      if (interimTranscript) {
+        userInput.value = finalTranscript + interimTranscript;
+      } else if (finalTranscript) {
+        userInput.value = finalTranscript;
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      isListening = false;
+      micBtn.textContent = '🎤';
+      micBtn.style.background = '';
+      micBtn.title = 'Voice Input';
+
+      if (event.error === 'not-allowed') {
+        alert('Microphone access denied. Please allow microphone permissions.');
+      } else if (event.error === 'no-speech') {
+        alert('No speech detected. Please try again.');
+      } else {
+        alert('Speech recognition error occurred. Please try again.');
+      }
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      micBtn.textContent = '🎤';
+      micBtn.style.background = '';
+      micBtn.title = 'Voice Input';
+    };
+
+    // Handle microphone button click
+    micBtn.addEventListener("click", () => {
+      if (isListening) {
+        recognition.stop();
+      } else {
+        // Request microphone permission if needed
+        recognition.start();
+      }
+    });
+  } else {
+    // Browser doesn't support Web Speech API
+    micBtn.disabled = true;
+    micBtn.title = 'Speech recognition not supported in this browser';
+    micBtn.style.opacity = '0.5';
+    console.warn('Web Speech API not supported in this browser');
+  }
 }
