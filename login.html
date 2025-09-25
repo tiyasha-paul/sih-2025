@@ -17,7 +17,14 @@
       </form>
       <div class="divider"><span>OR</span></div>
 
-      <button id="googleSignInBtn" class="btn google"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">Sign in with Google</button>
+  <button id="googleSignInBtn" class="btn google"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">Sign in with Google</button>
+
+  <script>
+    document.getElementById('googleSignInBtn').addEventListener('click', () => {
+      // Redirect to your backend OAuth login endpoint
+      window.location.href = 'http://localhost:3000/api/auth/login';
+    });
+  </script>
       <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
     </div>
   </div>

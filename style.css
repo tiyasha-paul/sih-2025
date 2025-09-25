@@ -160,11 +160,11 @@ body.dark {
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 5px; 
+  gap: 5px;
 }
 
 .logo-img {
-  width: 60px; 
+  width: 60px;
   height: 60px;
   object-fit: contain;
   margin: 0;
@@ -524,6 +524,49 @@ body.dark {
   background: var(--hover);
 }
 
+/* Microphone button specific styling */
+#micBtn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  min-width: 45px;
+  transition: all 0.3s ease;
+}
+
+#micBtn:hover {
+  background: var(--hover);
+  transform: scale(1.05);
+}
+
+#micBtn:active {
+  transform: scale(0.95);
+}
+
+#micBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#micBtn.recording {
+  background: #ff4444;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Index Sidebar Toggle (Optional if you implement it later) */
 .index-sidebar.collapsed {
   width: 60px;
@@ -577,6 +620,7 @@ body.dark {
     font-size: 32px;
   }
 
+
   .feature-cards {
     flex-direction: column;
     align-items: center;
@@ -587,6 +631,7 @@ body.dark {
     min-width: unset;
     width: 90%;
   }
+
 
   /* == Auth Pages == */
   .auth-box {
@@ -601,6 +646,7 @@ body.dark {
   .landing-navbar .logo-text {
     font-size: 24px;
   }
+
 
   .landing-navbar .nav-links {
     flex-wrap: wrap;
@@ -619,6 +665,7 @@ body.dark {
   .card {
     width: 100%;
   }
+
 
   .features-section h2 {
     font-size: 24px;
@@ -761,6 +808,7 @@ html, body {
     background: var(--input-bg);
     overflow-y: auto;
   }
+
 
   .sidebar:not(.collapsed) {
     transform: translateX(0);

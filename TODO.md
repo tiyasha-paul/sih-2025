@@ -28,3 +28,4 @@
 - [x] Test OAuth flow and chat functionality.
 - [x] Verify UI responsiveness and error handling.
 - [x] Run servers and check for any runtime issues.
+- [x] Fix OAuth redirect URI for local development.

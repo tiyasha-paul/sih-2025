@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HydroLens</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#6e5f4d" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body class="dark">
+  <div class="landing-container">
+
+    <nav class="navbar landing-navbar">
+      <div class="logo-container">
+        <img src="./logo.png" alt="logo" class="logo-img">
+        <span class="logo-text">HydroLens</span>
+      </div>
+      
+      <div class="nav-links">
+        <button id="toggle-theme" class="btn small">Dark Mode</button>
+        <a href="comparison.html" target="_blank" class="btn small">About</a>
+        <a href="updates_faq.html" target="_blank" class="btn small">Updates & FAQs</a>
+        <a href="signup.html" class="btn small">Sign Up/Login</a>
+      </div>
+    </nav>
+
+    <section class="hero-section">
+      <div class="hero-text">
+        <p class="heading">Welcome to HydroLens - A new Lens into India's groundwater data</p>
+        <p class="description">HydroLens helps you explore and understand groundwater assessments with ease — bringing clarity to complex datasets from the INGRES portal. Check out the video on how to effectively use HydroLens!</p>
+      </div>
+      <div class="hero-video">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/AjWfY7SnMBI?si=UgEZ6HMNQ0xSIFZS" 
+        title="Demo Video" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <section id="about" class="features-section">
+      <h2>Features</h2>
+      <div class="feature-cards">
+        <div class="card">
+          <h3>Simplified data</h3>
+          <p>Query groundwater data without navigating complex datasets.</p>
+        </div>
+        <div class="card">
+          <h3>Instant Access</h3>
+          <p>Get effective and immediate responses.</p>
+        </div>
+        <div class="card">
+          <h3>Multilingual Support</h3>
+          <p>Ask queries and receive responses in various languages.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer id="updates" class="footer">
+      <p>&copy; 2025 HydroLens. All rights reserved.</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch(error => {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+      });
+    }
+
+    // Performance Chart
+    const ctx1 = document.getElementById('performanceChart')?.getContext('2d');
+    if(ctx1) {
+      new Chart(ctx1, {
+          type: 'bar',
+          data: {
+              labels: ['HydroLens', 'ChatGPT', 'Google Bard'],
+              datasets: [{
+                  label: 'Overall Score',
+                  data: [95, 60, 55],
+                  backgroundColor: [
+                      '#d4af37',
+                      '#4285f4',
+                      '#34a853'
+                  ],
+                  borderColor: [
+                      '#b8941f',
+                      '#3367d6',
+                      '#2d8f44'
+                  ],
+                  borderWidth: 2,
+                  borderRadius: 8
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      display: false
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      max: 100,
+                      grid: {
+                          color: 'rgba(0,0,0,0.1)'
+                      }
+                  },
+                  x: {
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          }
+      });
+    }
+  </script>
+</body>
+</html>
+</create_file>
