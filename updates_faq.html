@@ -5,227 +5,228 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HydroLens Updates & FAQs</title>
   <style>
-    body {
-      background-color: #121212;
-      color: #f0f0f0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-      -webkit-user-select: none;
-      user-select: none;
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 15px;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: #ffd700;
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    .sections-wrapper {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin-bottom: 2rem;
-    }
-    
-    .section {
-      background: linear-gradient(145deg, #2f2f2f, #1e1e1e);
-      border-radius: 12px;
-      padding: 24px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 1px solid #3a3a3a;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .section:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.1);
-      border-color: #ffd700;
-    }
-    
-    .section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #ffd700, #ffed4a);
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-      transform-origin: left;
-    }
-    
-    .section:hover::before {
-      transform: scaleX(1);
-    }
-    
-    .section h2 {
-      margin: 0 0 16px 0;
-      cursor: pointer;
-      -webkit-user-select: none;
-      user-select: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #ffd700;
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
-    
-    .section-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      padding-left: 0;
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    
-    .section-content.open {
-      max-height: 1200px;
-      margin-top: 16px;
-      opacity: 1;
-      transform: translateY(0);
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s ease 0.1s,
-                  transform 0.3s ease 0.1s;
-    }
-    
-    .toggle-icon {
-      font-weight: bold;
-      font-size: 1.5rem;
-      line-height: 1;
-      -webkit-user-select: none;
-      user-select: none;
-      transition: transform 0.3s ease;
-      color: #ffd700;
-    }
-    
-    .section:hover .toggle-icon {
-      transform: scale(1.1);
-    }
-    
-    .section-content.open ~ h2 .toggle-icon {
-      transform: rotate(45deg);
-    }
-    
-    p, ul {
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-    
-    ul {
-      padding-left: 20px;
-    }
-    
-    li {
-      margin-bottom: 0.5rem;
-    }
-    
-    strong {
-      color: #ffd700;
-      font-weight: 600;
-    }
-    
-    code {
-      background: rgba(255, 215, 0, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      color: #ffed4a;
-      font-size: 0.9rem;
-    }
-    
-    details {
-      margin-bottom: 1rem;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    summary {
-      cursor: pointer;
-      list-style: none;
-      font-weight: 600;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      padding: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      transition: all 0.3s ease;
-    }
-    
-    summary:hover {
-      background: rgba(255, 215, 0, 0.1);
-    }
-    
-    .faq-toggle {
-      margin-right: 10px;
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: #ffd700;
-      transition: transform 0.3s ease;
-    }
-    
-    details[open] .faq-toggle {
-      transform: rotate(45deg);
-    }
-    
-    details p, details ul {
-      padding: 0 12px 12px 12px;
-      margin: 0;
-    }
-    
-    details ul {
-      list-style: none;
-      padding-left: 24px;
-    }
-    
-    details li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    
-    details li span:first-child {
-      color: #ffd700;
-      font-weight: bold;
-      margin-top: 2px;
-    }
-    
-    h3 {
-      color: #ffd700;
-      font-size: 1.2rem;
-      margin: 1.5rem 0 0.8rem 0;
-      font-weight: 600;
-    }
-    
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      padding: 2rem 0;
-      color: #888;
-      border-top: 1px solid #333;
-      font-size: 0.9rem;
-    }
-    
+  body {
+    background-color: #f0e9ca; /* --bg */
+    color: #3a3023; /* --text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    -webkit-user-select: none;
+    user-select: none;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #4b3e30; /* --primary */
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .sections-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 2rem;
+  }
+
+  .section {
+    background: linear-gradient(145deg, #ffffff, #f0e9ca); /* --secondary to --bg */
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #4b3e30; /* --border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(74, 62, 48, 0.2);
+    border-color: #7a6249; /* --hover */
+  }
+
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4b3e30, #7a6249); /* --primary to --hover */
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+
+  .section:hover::before {
+    transform: scaleX(1);
+  }
+
+  .section h2 {
+    margin: 0 0 16px 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #4b3e30; /* --primary */
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-left: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  .section-content.open {
+    max-height: 1200px;
+    margin-top: 16px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease 0.1s,
+                transform 0.3s ease 0.1s;
+  }
+
+  .toggle-icon {
+    font-weight: bold;
+    font-size: 1.5rem;
+    line-height: 1;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: transform 0.3s ease;
+    color: #4b3e30; /* --primary */
+  }
+
+  .section:hover .toggle-icon {
+    transform: scale(1.1);
+  }
+
+  .section-content.open ~ h2 .toggle-icon {
+    transform: rotate(45deg);
+  }
+
+  p, ul {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  strong {
+    color: #4b3e30; /* --primary */
+    font-weight: 600;
+  }
+
+  code {
+    background: rgba(74, 62, 48, 0.1); /* faint primary bg */
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #7a6249; /* --hover */
+    font-size: 0.9rem;
+  }
+
+  details {
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.6); /* --secondary */
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    color: #3a3023; /* --text */
+  }
+
+  summary:hover {
+    background: rgba(122, 98, 73, 0.15); /* --hover faded */
+  }
+
+  .faq-toggle {
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #4b3e30; /* --primary */
+    transition: transform 0.3s ease;
+  }
+
+  details[open] .faq-toggle {
+    transform: rotate(45deg);
+  }
+
+  details p, details ul {
+    padding: 0 12px 12px 12px;
+    margin: 0;
+  }
+
+  details ul {
+    list-style: none;
+    padding-left: 24px;
+  }
+
+  details li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  details li span:first-child {
+    color: #4b3e30; /* --primary */
+    font-weight: bold;
+    margin-top: 2px;
+  }
+
+  h3 {
+    color: #4b3e30; /* --primary */
+    font-size: 1.2rem;
+    margin: 1.5rem 0 0.8rem 0;
+    font-weight: 600;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem 0;
+    color: #3a3023; /* --text */
+    border-top: 1px solid #4b3e30; /* --border */
+    font-size: 0.9rem;
+  }
+
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
       body {
@@ -357,12 +358,12 @@
     
     /* Focus styles for accessibility */
     .section:focus-within {
-      outline: 2px solid #ffd700;
+      outline: 2px solid #3a3023;
       outline-offset: 2px;
     }
     
     summary:focus {
-      outline: 2px solid #ffd700;
+      outline: 2px solid #3a3023;
       outline-offset: -2px;
     }
     
@@ -444,7 +445,7 @@
 
       <div class="section" id="termsSection" onclick="toggleSection('termsContent')">
         <h2>
-          Terms & Condition
+          Terms & Conditions
           <span class="toggle-icon" id="termsToggle">+</span>
         </h2>
         <div class="section-content" id="termsContent">
