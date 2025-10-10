@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HydroLens Chatbot Comparison</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0e9ca 0%, #e5dab7 50%, #d9cfa2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4b3e30 0%, #7a6249 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .chatbot-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chatbot-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4b3e30, #7a6249);
+        }
+
+        .chatbot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .hydrolens-card {
+            border: 3px solid #4b3e30;
+            background: linear-gradient(145deg, #fff 0%, #f8f6f3 100%);
+        }
+
+        .hydrolens-card::before {
+            background: linear-gradient(90deg, #4b3e30, #7a6249);
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4b3e30;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hydrolens-card .card-title {
+            color: #4b3e30;
+            font-size: 1.7em;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .check {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .cross {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .partial {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #4b3e30;
+            background: linear-gradient(135deg, #f0e9ca, #e5dab7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .hydrolens-card .score {
+            background: linear-gradient(135deg, #4b3e30, #7a6249);
+            color: #ffffff;
+            box-shadow: 0 5px 15px rgba(75, 62, 48, 0.3);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: #4b3e30;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .key-advantages {
+            background: linear-gradient(135deg, #4b3e30 0%, #7a6249 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .key-advantages h2 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .advantage-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .advantage-item h3 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .responsive-table {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: linear-gradient(135deg, #4b3e30, #7a6249);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        tr:hover {
+            background-color: #f8f6f3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .advantages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HydroLens Market Comparison</h1>
+            <p>AI-Driven Virtual Assistant for INGRES</p>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="chatbot-card hydrolens-card">
+                <div class="card-title">
+                     HydroLens
+                </div>
+                <ul class="feature-list">
+                    <li><span class="check">✓</span> Specialized Groundwater Data</li>
+                    <li><span class="check">✓</span> INGRES Integration</li>
+                    <li><span class="check">✓</span> Multilingual Support (4 languages)</li>
+                    <li><span class="check">✓</span> Scientific Visualizations</li>
+                    <li><span class="check">✓</span> Historical Data Analysis</li>
+                    <li><span class="check">✓</span> GIS-based Insights</li>
+                    <li><span class="check">✓</span> Government Policy Support</li>
+                    <li><span class="check">✓</span> Open Source & Cost-effective</li>
+                </ul>
+                <div class="score">95/100</div>
+            </div>
+
+            <div class="chatbot-card">
+                <div class="card-title">ChatGPT</div>
+                <ul class="feature-list">
+                    <li><span class="cross">✗</span> General Purpose (No Groundwater Focus)</li>
+                    <li><span class="cross">✗</span> No INGRES Integration</li>
+                    <li><span class="check">✓</span> Multilingual Support (100+ languages)</li>
+                    <li><span class="partial">◐</span> Limited Scientific Visualizations</li>
+                    <li><span class="cross">✗</span> No Historical Groundwater Data</li>
+                    <li><span class="cross">✗</span> No GIS Integration</li>
+                    <li><span class="cross">✗</span> No Government-specific Features</li>
+                    <li><span class="cross">✗</span> Paid Service ($20/month)</li>
+                </ul>
+                <div class="score">60/100</div>
+            </div>
+
+            <div class="chatbot-card">
+                <div class="card-title">Google Gemini</div>
+                <ul class="feature-list">
+                    <li><span class="cross">✗</span> General Purpose Only</li>
+                    <li><span class="cross">✗</span> No INGRES Integration</li>
+                    <li><span class="check">✓</span> Multilingual Support (40+ languages)</li>
+                    <li><span class="partial">◐</span> Basic Chart Generation</li>
+                    <li><span class="cross">✗</span> No Specialized Data Access</li>
+                    <li><span class="cross">✗</span> No GIS Capabilities</li>
+                    <li><span class="cross">✗</span> No Domain-specific Features</li>
+                    <li><span class="check">✓</span> Free to Use</li>
+                </ul>
+                <div class="score">55/100</div>
+            </div>
+
+            <div class="chatbot-card">
+                <div class="card-title">Microsoft Copilot</div>
+                <ul class="feature-list">
+                    <li><span class="cross">✗</span> General Business Focus</li>
+                    <li><span class="cross">✗</span> No Government Database Integration</li>
+                    <li><span class="check">✓</span> Multilingual Support (Multiple languages)</li>
+                    <li><span class="check">✓</span> Good Data Visualization</li>
+                    <li><span class="cross">✗</span> No Environmental Data Focus</li>
+                    <li><span class="cross">✗</span> No GIS Integration</li>
+                    <li><span class="partial">◐</span> Limited Government Features</li>
+                    <li><span class="cross">✗</span> Subscription Required</li>
+                </ul>
+                <div class="score">65/100</div>
+            </div>
+
+            <div class="chatbot-card">
+                <div class="card-title">Claude AI</div>
+                <ul class="feature-list">
+                    <li><span class="cross">✗</span> General Purpose Assistant</li>
+                    <li><span class="cross">✗</span> No Database Integration</li>
+                    <li><span class="check">✓</span> Multilingual Capabilities</li>
+                    <li><span class="check">✓</span> Advanced Analysis Features</li>
+                    <li><span class="cross">✗</span> No Real-time Data Access</li>
+                    <li><span class="cross">✗</span> No GIS Features</li>
+                    <li><span class="cross">✗</span> No Government-specific Tools</li>
+                    <li><span class="partial">◐</span> Freemium Model</li>
+                </ul>
+                <div class="score">58/100</div>
+            </div>
+
+            <div class="chatbot-card">
+                <div class="card-title">Rasa Chatbot</div>
+                <ul class="feature-list">
+                    <li><span class="check">✓</span> Customizable for Specific Domains</li>
+                    <li><span class="partial">◐</span> Requires Custom Integration</li>
+                    <li><span class="partial">◐</span> Limited Multilingual (Needs Setup)</li>
+                    <li><span class="cross">✗</span> No Built-in Visualizations</li>
+                    <li><span class="partial">◐</span> Custom Data Integration Required</li>
+                    <li><span class="cross">✗</span> No Built-in GIS</li>
+                    <li><span class="partial">◐</span> Customizable for Government</li>
+                    <li><span class="check">✓</span> Open Source</li>
+                </ul>
+                <div class="score">70/100</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">Overall Performance Comparison</h3>
+            <canvas id="performanceChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>HydroLens</th>
+                        <th>ChatGPT</th>
+                        <th>Google Gemini</th>
+                        <th>MS Copilot</th>
+                        <th>Claude AI</th>
+                        <th>Rasa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Domain Specialization</strong></td>
+                        <td>🌊 Groundwater Focused</td>
+                        <td>❌ General Purpose</td>
+                        <td>❌ General Purpose</td>
+                        <td>💼 Business Focused</td>
+                        <td>❌ General Purpose</td>
+                        <td>🔧 Customizable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Integration</strong></td>
+                        <td>✅ INGRES Native</td>
+                        <td>❌ None</td>
+                        <td>❌ None</td>
+                        <td>❌ Limited</td>
+                        <td>❌ None</td>
+                        <td>🔧 Custom Required</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visualization</strong></td>
+                        <td>✅ Scientific Charts</td>
+                        <td>🟡 Basic</td>
+                        <td>🟡 Basic</td>
+                        <td>✅ Advanced</td>
+                        <td>✅ Good</td>
+                        <td>❌ Custom Needed</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cost</strong></td>
+                        <td>✅ Open Source</td>
+                        <td>💰 $20/month</td>
+                        <td>✅ Free</td>
+                        <td>💰 Subscription</td>
+                        <td>🟡 Freemium</td>
+                        <td>✅ Open Source</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Government Ready</strong></td>
+                        <td>✅ Policy Support</td>
+                        <td>❌ General Use</td>
+                        <td>❌ General Use</td>
+                        <td>🟡 Business Focus</td>
+                        <td>❌ General Use</td>
+                        <td>🔧 Custom Required</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">Feature-wise Comparison</h3>
+            <canvas id="featureChart" width="400" height="300"></canvas>
+        </div>
+
+        <div class="key-advantages">
+            <h2>HydroLens Unique Advantages</h2>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <h3>Domain Expertise</h3>
+                    <p>First AI chatbot specifically designed for groundwater resource management with deep INGRES integration.</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Scientific Visualization</h3>
+                    <p>Built-in capability to generate groundwater assessment charts, trends, and GIS-based visualizations.</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Government-Centric</h3>
+                    <p>Designed specifically for CGWB, state departments, and policy makers with official data access.</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Regional Language Support</h3>
+                    <p>Native support for Hindi, Bengali, and Oriya - bridging the digital divide in rural India.</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Cost Effective</h3>
+                    <p>Open-source solution saving government resources while providing enterprise-grade functionality.</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Historical Analysis</h3>
+                    <p>Access to years of groundwater data for trend analysis and predictive insights unavailable elsewhere.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Performance Chart
+        const ctx1 = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['HydroLens', 'ChatGPT', 'Google Bard', 'MS Copilot', 'Claude AI', 'Rasa'],
+                datasets: [{
+                    label: 'Overall Score',
+                    data: [95, 60, 55, 65, 58, 70],
+                    backgroundColor: [
+                        '#d4af37',
+                        '#4285f4',
+                        '#34a853',
+                        '#0078d4',
+                        '#ff6b35',
+                        '#6c5ce7'
+                    ],
+                    borderColor: [
+                        '#b8941f',
+                        '#3367d6',
+                        '#2d8f44',
+                        '#005a9e',
+                        '#e55a2b',
+                        '#5b4cdb'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Feature Chart
+        const ctx2 = document.getElementById('featureChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'radar',
+            data: {
+                labels: ['Domain Focus', 'Data Integration', 'Multilingual', 'Visualization', 'Cost Effectiveness', 'Gov Features'],
+                datasets: [{
+                    label: 'HydroLens',
+                    data: [10, 10, 8, 9, 10, 10],
+                    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                    borderColor: '#d4af37',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#d4af37',
+                    pointRadius: 6
+                }, {
+                    label: 'ChatGPT',
+                    data: [3, 2, 10, 5, 3, 2],
+                    backgroundColor: 'rgba(66, 133, 244, 0.2)',
+                    borderColor: '#4285f4',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#4285f4',
+                    pointRadius: 4
+                }, {
+                    label: 'Rasa',
+                    data: [7, 6, 5, 3, 9, 6],
+                    backgroundColor: 'rgba(108, 92, 231, 0.2)',
+                    borderColor: '#6c5ce7',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#6c5ce7',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                elements: {
+                    line: {
+                        borderWidth: 2
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: {
+                            stepSize: 2
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

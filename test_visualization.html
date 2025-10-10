@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🌊 HydroLens Visualization Test</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Trend Plot for Delhi</h2>
+        <button onclick="testTrendPlot('Delhi', '2024')">Generate Delhi Trend Plot</button>
+        <div id="result1"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Category Bar for Haryana</h2>
+        <button onclick="testCategoryBar('Haryana', '2022')">Generate Haryana Category Bar</button>
+        <div id="result2"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Trend Plot for West Bengal</h2>
+        <button onclick="testTrendPlot('West Bengal', '2023')">Generate West Bengal Trend</button>
+        <div id="result3"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Category Bar for Odisha</h2>
+        <button onclick="testCategoryBar('Odisha', '2024')">Generate Odisha Category Bar</button>
+        <div id="result4"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Specific Location - Rohini</h2>
+        <button onclick="testSpecificLocation('Rohini', '2024')">Generate Rohini Visualization</button>
+        <div id="result5"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000/api/query';
+
+        function showStatus(elementId, message, type) {
+            const div = document.getElementById(elementId);
+            div.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function showResult(elementId, data) {
+            const div = document.getElementById(elementId);
+            let html = '<div class="result">';
+            html += `<p><strong>Query:</strong> ${data.query}</p>`;
+            html += `<p><strong>Location:</strong> ${data.location || 'N/A'}</p>`;
+            html += `<p><strong>State:</strong> ${data.state || 'N/A'}</p>`;
+            html += `<p><strong>Year:</strong> ${data.year || 'N/A'}</p>`;
+            if (data.answer) {
+                html += `<p><strong>Answer:</strong> ${data.answer}</p>`;
+            }
+            if (data.graph) {
+                const graphUrl = data.graph.startsWith('/') ?
+                    'http://127.0.0.1:5000' + data.graph : data.graph;
+                html += `<img src="${graphUrl}?t=${Date.now()}" alt="Visualization">`;
+            }
+            html += '</div>';
+            div.innerHTML = html;
+        }
+
+        async function testTrendPlot(location, year) {
+            const resultId = location === 'Delhi' ? 'result1' :
+                             location === 'West Bengal' ? 'result3' : 'result1';
+
+            showStatus(resultId, `Generating trend plot for ${location} ${year}...`, 'info');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: `show trend plot for ${location} ${year}`,
+                        lang: 'English'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                showResult(resultId, data);
+            } catch (error) {
+                showStatus(resultId, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCategoryBar(state, year) {
+            const resultId = state === 'Haryana' ? 'result2' : 'result4';
+
+            showStatus(resultId, `Generating category bar for ${state} ${year}...`, 'info');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: `show category bar for ${state} ${year}`,
+                        lang: 'English'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                showResult(resultId, data);
+            } catch (error) {
+                showStatus(resultId, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSpecificLocation(location, year) {
+            showStatus('result5', `Generating visualization for ${location} ${year}...`, 'info');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: `plot trend for ${location} ${year}`,
+                        lang: 'English'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                showResult('result5', data);
+            } catch (error) {
+                showStatus('result5', `Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Check server status on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/CHAT/metadata.json');
+                if (response.ok) {
+                    console.log('✅ Server is running and accessible');
+                }
+            } catch (error) {
+                alert('⚠️ Server not accessible. Make sure to run: python main.py --serve');
+            }
+        });
+    </script>
+</body>
+</html>

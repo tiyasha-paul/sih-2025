@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydroLens</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="dark">
+  <div class="chat-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class = "sidebar-header">
+        <button id="hamburger" class="btn small">☰</button>
+        <span class="logo-text">HydroLens</span>
+      </div>
+      <button id="newChat" class="btn small">+ New Chat</button>
+      <div class="sidebar-bottom">
+        <button class="btn small" id="darkToggle"></button>
+        <a href="index.html" class="btn small" id="logoutBtn">Logout</a>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <main class="chat-main">
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <!-- Chat Input -->
+      <div class="chat-input">
+        <select id="modeSelect">
+          <option>Auto</option>
+          <option>Expert</option>
+          <option>Superfast</option>
+        </select>
+        <select id="langSelect">
+          <option>English</option>
+          <option>हिन्दी</option>
+          <option>বাংলা</option>
+          <option>தமிழ்</option>
+          <option>తెలుగు</option>
+        </select>
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button id="micBtn" title="Voice Input" aria-label="Start voice input">🎤</button>
+        <button id="sendBtn">➤</button>
+      </div>
+    </main>
+  </div>
+  <script>
+    // Auto-start Flask server when chat page loads
+    (async function() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/', { method: 'GET' });
+        if (response.ok) {
+          console.log('✓ Server is running');
+        }
+      } catch (error) {
+        console.log('Starting server automatically...');
+        // Start server silently
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = 'server-autostart.vbs';
+        document.body.appendChild(iframe);
+
+        // Show notification
+        const notice = document.createElement('div');
+        notice.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#2a1810;color:#ffffff;padding:12px 24px;border-radius:8px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+        notice.textContent = '🌊 Starting HydroLens server... Please wait';
+        document.body.appendChild(notice);
+        setTimeout(() => notice.remove(), 8000);
+      }
+    })();
+
+    (function(){
+      const dataUrl = './CHAT/metadata.json';
+      const chatMessages = document.getElementById('chatMessages');
+      if(chatMessages){
+        chatMessages.style.display = 'flex';
+        chatMessages.style.flexDirection = 'column';
+        chatMessages.style.gap = '14px';
+        chatMessages.style.padding = '12px 16px';
+        chatMessages.style.overflowY = 'auto';
+      }
+      const userInput = document.getElementById('userInput');
+      const sendBtn = document.getElementById('sendBtn');
+      const modeSelect = document.getElementById('modeSelect');
+      const langSelect = document.getElementById('langSelect');
+
+      addMessage('bot','Hello! How can I help you today?');
+
+      let metadata = null;
+      let entries = [];
+
+      function addMessage(role, text){
+        const m = document.createElement('div');
+        m.className = 'message ' + (role === 'user' ? 'user-msg right' : 'bot-msg left');
+        m.style.display = 'inline-block';
+        m.style.maxWidth = '72%';
+        m.style.padding = '12px 18px';
+        m.style.borderRadius = '20px';
+        m.style.margin = '8px 0';
+        m.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+        m.style.wordBreak = 'break-word';
+        m.style.whiteSpace = 'pre-wrap';
+        if(role === 'user'){
+          m.style.alignSelf = 'flex-end';
+          m.style.textAlign = 'right';
+          m.style.marginLeft = '20%';
+          m.style.marginRight = '12px';
+          m.style.backgroundColor = '#8f775f';
+          m.style.color = '#1e120f';
+        } else {
+          m.style.alignSelf = 'flex-start';
+          m.style.textAlign = 'left';
+          m.style.marginRight = '20%';
+          m.style.marginLeft = '12px';
+          m.style.backgroundColor = '#3a2418';
+          m.style.color = '#ffffff';
+        }
+        m.textContent = text;
+        chatMessages.appendChild(m);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return m;
+      }
+
+      function addImageMessage(role, imgUrl, caption){
+        const wrapper = document.createElement('div');
+        wrapper.className = 'message ' + (role === 'user' ? 'user-msg right' : 'bot-msg left');
+        wrapper.style.display = 'inline-block';
+        wrapper.style.maxWidth = '72%';
+        wrapper.style.padding = '10px';
+        wrapper.style.borderRadius = '12px';
+        wrapper.style.margin = '8px 0';
+        wrapper.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+        wrapper.style.backgroundColor = '#2a1810';
+        if(role === 'user'){
+          wrapper.style.alignSelf = 'flex-end';
+          wrapper.style.textAlign = 'right';
+          wrapper.style.marginLeft = '20%';
+          wrapper.style.marginRight = '12px';
+        } else {
+          wrapper.style.alignSelf = 'flex-start';
+          wrapper.style.textAlign = 'left';
+          wrapper.style.marginRight = '20%';
+          wrapper.style.marginLeft = '12px';
+        }
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = caption || 'visualization';
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        img.style.display = 'block';
+        img.style.margin = '0';
+        const cap = document.createElement('div');
+        cap.textContent = caption || '';
+        cap.style.marginTop = '6px';
+        cap.style.fontSize = '13px';
+        cap.style.color = '#ffffff';
+        cap.style.fontStyle = 'italic';
+        wrapper.appendChild(img);
+        if(caption) wrapper.appendChild(cap);
+        chatMessages.appendChild(wrapper);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return wrapper;
+      }
+
+      function normalize(s){
+        return (s||'').toString().toUpperCase().replace(/[\W_]+/g,' ').trim();
+      }
+
+      const _i18n = {
+        'English': {
+          loading: 'Loading groundwater dataset...',
+          dataset_loaded: 'Dataset loaded — {count} keys available. Ask about a location, year, or groundwater extraction.',
+          error_loading: 'Error loading dataset: {msg} — check that CHAT/metadata.json exists and is reachable.',
+          please_type: 'Please type a question.',
+          help_hint: 'Try queries like: "groundwater extraction for Rohini 2024 - 25", "show data for Mayur Vihar", "trend for Narela".',
+          no_location: 'No location detected in your question.',
+          no_record: 'No matching record found in dataset.',
+          no_matches: 'No matching records found. Try a different location name or type "help".',
+          no_exact_matches_prefix: 'No exact matches. Did you mean:\n',
+          gw_extraction: 'GW extraction:',
+          annual_extractable: 'Annual extractable:',
+          rainfall_mm: 'Rainfall(mm):',
+          label_rainfall_mm: 'rainfall mm : ',
+          label_annual: 'annual extractable ground water resources : ',
+          label_extraction: 'ground water extraction: '
+        }
+      };
+
+      function t(key, vars){
+        const lang = (langSelect && langSelect.value) ? langSelect.value : 'English';
+        const dict = _i18n[lang] || _i18n['English'];
+        let s = dict[key] || key;
+        if(vars){ for(const k of Object.keys(vars)){ s = s.replace(new RegExp('\{'+k+'\}','g'), vars[k]); } }
+        return s;
+      }
+
+      function preprocess(md){
+        entries = [];
+        for(const k of Object.keys(md||{})){
+          const v = md[k];
+          const parts = k.split('_');
+          let location = parts[0] || '';
+          let year = parts.slice(-1)[0] || '';
+          let state = '';
+          if(parts.length >= 3){
+            state = parts.slice(1, parts.length-1).join(' ');
+          } else if(parts.length === 2){
+            const maybeYear = parts[1];
+            if(/\d{4}/.test(maybeYear)) year = maybeYear; else state = parts[1];
+          }
+          entries.push({rawKey:k, locationRaw:location, stateRaw:state, yearRaw:year, props:v, normKey:normalize(k), normLocation:normalize(location), normState:normalize(state), normYear:normalize(year)});
+        }
+      }
+
+      function searchMetadata(query, maxResults=7){
+        if(!entries || entries.length===0) return [];
+        const q = normalize(query);
+        const qWords = q.split(/\s+/).filter(Boolean);
+        const results = entries.map(e =>{
+          let score = 0;
+          for(const w of qWords){
+            if(e.normKey.includes(w)) score += 3;
+            if(e.normLocation.includes(w)) score += 5;
+            if(e.normState.includes(w)) score += 4;
+            if(e.normYear.includes(w)) score += 6;
+          }
+          if(e.props && typeof e.props.ground_water_extraction_ham !== 'undefined') score += 0.1;
+          return {entry:e, score};
+        }).filter(r => r.score>0).sort((a,b)=>b.score-a.score).slice(0,maxResults);
+        return results.map(r=>r.entry);
+      }
+
+      function summarizeEntries(list){
+        if(!list || list.length===0) return t('no_matches');
+        const grouped = {};
+        for(const e of list){
+          const key = e.locationRaw + (e.stateRaw ? (' | '+e.stateRaw) : '');
+          grouped[key] = grouped[key] || [];
+          grouped[key].push(e);
+        }
+        const parts = [];
+        for(const g of Object.keys(grouped)){
+          const arr = grouped[g];
+          parts.push(g + ':' );
+          for(const e of arr){
+            const p = e.props || {};
+            const year = e.yearRaw || '';
+            const gw = (p.ground_water_extraction_ham!=null) ? (t('gw_extraction') + ' ' + p.ground_water_extraction_ham) : (t('gw_extraction') + ' N/A');
+            const ae = (p.annual_extractable_ground_water_resources_ham!=null) ? (' | ' + t('annual_extractable') + ' ' + p.annual_extractable_ground_water_resources_ham) : '';
+            const rf = (p.rainfall_mm!=null) ? (' | ' + t('rainfall_mm') + ' ' + p.rainfall_mm) : '';
+            parts.push('  ' + (year?('Year '+year+' - '):'') + gw + ae + rf);
+          }
+        }
+        return parts.join('\n');
+      }
+
+      async function loadMetadata(){
+        try{
+          addMessage('bot', t('loading'));
+          const resp = await fetch(dataUrl);
+          if(!resp.ok) throw new Error('Failed to fetch metadata.json');
+          metadata = await resp.json();
+          preprocess(metadata);
+          addMessage('bot', t('dataset_loaded', {count: Object.keys(metadata).length}));
+        }catch(err){
+          addMessage('bot', t('error_loading', {msg: err.message}));
+        }
+      }
+
+      function handleUserQuery(text){
+        const mode = (modeSelect && modeSelect.value) || 'Auto';
+        const lang = (langSelect && langSelect.value) || 'English';
+        const q = text.trim();
+        if(!q) return addMessage('bot', t('please_type'));
+
+        // Graph/visualization intent
+        try{
+          const graphPattern = /\b(generate|plot|graph|visuali(?:se|ze)|show|display|chart|trend|category|bar)\b/i;
+          if(graphPattern.test(q)){
+            addMessage('bot', 'Generating visualization...');
+            fetch('http://127.0.0.1:5000/api/query', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ query: q, lang: lang })
+            }).then(async res => {
+              if(!res.ok){
+                const txt = await res.text();
+                addMessage('bot', 'Server error: ' + res.status + '. Make sure the Flask server is running.');
+                console.error('Server error:', res.status, txt);
+                return;
+              }
+              const j = await res.json();
+              if(j.graph){
+                let graphUrl = j.graph;
+                if(graphUrl.startsWith('/')) graphUrl = 'http://127.0.0.1:5000' + graphUrl;
+                if(j.answer) addMessage('bot', j.answer);
+                addImageMessage('bot', graphUrl + '?t=' + Date.now(), 'Groundwater Visualization');
+              } else if(j.answer){
+                addMessage('bot', j.answer);
+              } else {
+                addMessage('bot', 'No visualization returned.');
+              }
+            }).catch(err=>{
+              console.error('API fetch error', err);
+              addMessage('bot', 'Error contacting visualization server.');
+            });
+            return;
+          }
+        }catch(e){ console.error('Graph intent detection error', e); }
+
+        if(q.toLowerCase() === 'help'){
+          return addMessage('bot', t('help_hint'));
+        }
+
+        const results = searchMetadata(q, 20);
+        if(results.length===0){
+          const tokens = normalize(q).split(/\s+/).filter(Boolean);
+          const suggestions = new Set();
+          for(const t of tokens){
+            for(const e of entries){
+              if(e.normLocation.includes(t)) suggestions.add(e.locationRaw + (e.stateRaw?(' | '+e.stateRaw):''));
+              if(e.normState.includes(t)) suggestions.add(e.stateRaw);
+            }
+          }
+          if(suggestions.size>0){
+            addMessage('bot', t('no_exact_matches_prefix') + Array.from(suggestions).slice(0,8).join('\n'));
+          } else {
+            addMessage('bot', t('no_matches'));
+          }
+          return;
+        }
+
+        const summary = summarizeEntries(results);
+        addMessage('bot', summary);
+      }
+
+      sendBtn.addEventListener('click', ()=>{
+        const text = userInput.value;
+        if(!text) return;
+        addMessage('user', text);
+        userInput.value = '';
+        handleUserQuery(text);
+      });
+
+      userInput.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter') { sendBtn.click(); }
+      });
+
+      (function(){
+        const hamburger = document.getElementById('hamburger');
+        const newChatBtn = document.getElementById('newChat');
+        const darkToggle = document.getElementById('darkToggle');
+        const micBtnEl = document.getElementById('micBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if(hamburger) hamburger.addEventListener('click', ()=>{
+          const sidebarEl = document.querySelector('.sidebar');
+          const isCollapsed = document.body.classList.toggle('collapsed');
+          if(sidebarEl) sidebarEl.classList.toggle('collapsed', isCollapsed);
+          const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+          hamburger.setAttribute('aria-expanded', (!expanded).toString());
+        });
+
+        if(newChatBtn) newChatBtn.addEventListener('click', ()=>{
+          chatMessages.innerHTML = '';
+          addMessage('bot','Hello! How can I help you today?');
+        });
+
+        if(darkToggle){
+          function updateDarkLabel(){
+            if(document.body.classList.contains('dark')) darkToggle.textContent = 'Light Mode';
+            else darkToggle.textContent = 'Dark Mode';
+          }
+          darkToggle.addEventListener('click', ()=>{
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+            updateDarkLabel();
+          });
+          updateDarkLabel();
+        }
+
+        if(micBtnEl){
+          let recognizing = false;
+          let recognition = null;
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if(SpeechRecognition){
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.onresult = (e)=>{
+              const text = Array.from(e.results).map(r=>r[0].transcript).join('');
+              userInput.value = text;
+              sendBtn.click();
+            };
+            recognition.onend = ()=>{ recognizing = false; micBtnEl.classList.remove('listening'); };
+          }
+          micBtnEl.addEventListener('click', ()=>{
+            if(!recognition){ addMessage('bot','Voice input not supported in this browser.'); return; }
+            if(!recognizing){ recognizing = true; micBtnEl.classList.add('listening'); recognition.start(); }
+            else { recognition.stop(); recognizing = false; micBtnEl.classList.remove('listening'); }
+          });
+        }
+      })();
+
+      loadMetadata();
+    })();
+  </script>
+</body>
+</html>

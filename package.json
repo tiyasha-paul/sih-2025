@@ -1,0 +1,32 @@
+{
+  "name": "hydrolens",
+  "version": "1.0.0",
+  "description": "HydroLens - A groundwater data exploration platform",
+  "main": "server/acc/script/server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server/acc/script/server.js",
+    "setup": "npm install",
+    "test": "node test-setup.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "google-auth-library": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.8.7",
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "hydrolens",
+    "groundwater",
+    "ai",
+    "chat"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
