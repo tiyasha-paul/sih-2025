@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydroLens API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #0070f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #0051cc;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .success { color: green; }
+    .error { color: red; }
+    .info { color: blue; }
+  </style>
+</head>
+<body>
+  <h1>🌊 HydroLens API Diagnostics</h1>
+
+  <div class="test-section">
+    <h2>Test 1: API Root</h2>
+    <button onclick="testApiRoot()">Test /api/index</button>
+    <div id="result1" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Metadata Endpoint</h2>
+    <button onclick="testMetadata()">Test /api/metadata</button>
+    <div id="result2" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Query Endpoint</h2>
+    <button onclick="testQuery()">Test /api/query</button>
+    <div id="result3" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: Alternative Paths</h2>
+    <button onclick="testAlternativePaths()">Test All Variations</button>
+    <div id="result4" class="result"></div>
+  </div>
+
+  <script>
+    function log(elementId, message, type = 'info') {
+      const element = document.getElementById(elementId);
+      const timestamp = new Date().toLocaleTimeString();
+      element.innerHTML += `<span class="${type}">[${timestamp}] ${message}</span>\n`;
+    }
+
+    function clear(elementId) {
+      document.getElementById(elementId).innerHTML = '';
+    }
+
+    async function testApiRoot() {
+      clear('result1');
+      log('result1', 'Testing /api/index...');
+
+      try {
+        const response = await fetch('/api/index');
+        log('result1', `Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+
+        if (response.ok) {
+          const data = await response.json();
+          log('result1', 'Response:\n' + JSON.stringify(data, null, 2), 'success');
+        } else {
+          const text = await response.text();
+          log('result1', 'Response:\n' + text, 'error');
+        }
+      } catch (error) {
+        log('result1', 'Error: ' + error.message, 'error');
+      }
+    }
+
+    async function testMetadata() {
+      clear('result2');
+      log('result2', 'Testing /api/metadata...');
+
+      try {
+        const response = await fetch('/api/metadata');
+        log('result2', `Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+
+        if (response.ok) {
+          const data = await response.json();
+          const keys = Object.keys(data);
+          log('result2', `Success! Found ${keys.length} records`, 'success');
+          log('result2', 'First 3 keys:\n' + keys.slice(0, 3).join('\n'));
+        } else {
+          const text = await response.text();
+          log('result2', 'Response:\n' + text, 'error');
+        }
+      } catch (error) {
+        log('result2', 'Error: ' + error.message, 'error');
+      }
+    }
+
+    async function testQuery() {
+      clear('result3');
+      log('result3', 'Testing /api/query with POST...');
+
+      try {
+        const response = await fetch('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: 'show trend for Delhi 2024',
+            lang: 'English'
+          })
+        });
+
+        log('result3', `Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+
+        if (response.ok) {
+          const data = await response.json();
+          log('result3', 'Response:\n' + JSON.stringify(data, null, 2), 'success');
+        } else {
+          const text = await response.text();
+          log('result3', 'Response:\n' + text, 'error');
+        }
+      } catch (error) {
+        log('result3', 'Error: ' + error.message, 'error');
+      }
+    }
+
+    async function testAlternativePaths() {
+      clear('result4');
+
+      const paths = [
+        '/api',
+        '/api/',
+        '/api/index',
+        '/api/index.js',
+        '/api/metadata',
+        '/api/metadata.js',
+        '/api/query',
+        '/api/query.js'
+      ];
+
+      for (const path of paths) {
+        try {
+          log('result4', `Testing ${path}...`);
+          const response = await fetch(path);
+          log('result4', `  → ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+        } catch (error) {
+          log('result4', `  → Error: ${error.message}`, 'error');
+        }
+      }
+    }
+
+    // Auto-run basic test on load
+    window.addEventListener('load', () => {
+      log('result1', 'Page loaded. Click buttons to test API endpoints.');
+    });
+  </script>
+</body>
+</html>
