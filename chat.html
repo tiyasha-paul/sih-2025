@@ -258,18 +258,23 @@
           const graphPattern = /\b(generate|plot|graph|visuali(?:se|ze)|show|display|chart|trend|category|bar)\b/i;
           if(graphPattern.test(q)){
             addMessage('bot', 'Processing your query...');
+            console.log('Calling /api/query with:', { query: q, lang: lang });
+
             fetch('/api/query', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ query: q, lang: lang })
             }).then(async res => {
+              console.log('API Response status:', res.status);
               if(!res.ok){
                 const txt = await res.text();
-                addMessage('bot', 'Server error: ' + res.status);
                 console.error('Server error:', res.status, txt);
+                addMessage('bot', '⚠️ API Error: ' + res.status + '\n\nThe serverless function may still be deploying. Please wait 1-2 minutes and try again, or check the location-based search below.');
                 return;
               }
               const j = await res.json();
+              console.log('API Response:', j);
+
               if(j.graph){
                 let graphUrl = j.graph;
                 if(j.answer) addMessage('bot', j.answer);
@@ -280,8 +285,8 @@
                 addMessage('bot', 'No visualization returned.');
               }
             }).catch(err=>{
-              console.error('API fetch error', err);
-              addMessage('bot', 'Error contacting server.');
+              console.error('API fetch error:', err);
+              addMessage('bot', '⚠️ Could not reach API endpoint.\n\nThis may happen if:\n• Vercel is still deploying (wait 1-2 minutes)\n• The API function needs to cold-start (try again)\n\nYou can still use location-based search below!');
             });
             return;
           }
