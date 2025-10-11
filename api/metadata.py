@@ -1,10 +1,6 @@
+from http.server import BaseHTTPRequestHandler
 import json
 import os
-import sys
-from flask import Flask, jsonify, request
-
-# Add parent directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # Load data.json and convert to metadata format
 DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'CHAT', 'data.json')
@@ -12,7 +8,7 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'CHAT', 'data.json')
 def load_metadata():
     metadata_json = {}
     try:
-        with open(DATA_PATH, "r") as f:
+        with open(DATA_PATH, "r", encoding='utf-8') as f:
             data_json = json.load(f)
 
         for state, records in data_json.items():
@@ -42,34 +38,26 @@ def load_metadata():
 
     return metadata_json
 
-# Vercel serverless function handler
-def handler(request):
-    # Handle CORS preflight
-    if request.method == 'OPTIONS':
-        return jsonify({'ok': True}), 200, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-        }
+class handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
-    try:
-        metadata = load_metadata()
-        return jsonify(metadata), 200, {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        }
-    except Exception as e:
-        return jsonify({
-            'error': str(e)
-        }), 500, {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        }
-
-# For Vercel
-app = Flask(__name__)
-
-@app.route('/', defaults={'path': ''}, methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/<path:path>', methods=['GET', 'POST', 'OPTIONS'])
-def catch_all(path):
-    return handler(request)
+    def do_GET(self):
+        try:
+            metadata = load_metadata()
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(metadata).encode('utf-8'))
+        except Exception as e:
+            error_response = {'error': str(e)}
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(error_response).encode('utf-8'))

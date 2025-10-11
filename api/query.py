@@ -1,18 +1,14 @@
+from http.server import BaseHTTPRequestHandler
 import json
 import os
-import sys
-from flask import Flask, request, jsonify
 import re
-
-# Add parent directory to path to import from CHAT folder
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # Load metadata from data.json
 DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'CHAT', 'data.json')
 
 metadata_json = {}
 try:
-    with open(DATA_PATH, "r") as f:
+    with open(DATA_PATH, "r", encoding='utf-8') as f:
         data_json = json.load(f)
 
     for state, records in data_json.items():
@@ -147,72 +143,73 @@ def format_groundwater_response(record):
 
     return response
 
-# Vercel serverless function handler
-def handler(request):
-    # Handle CORS preflight
-    if request.method == 'OPTIONS':
-        return jsonify({'ok': True}), 200, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-        }
+class handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
-    try:
-        payload = request.get_json(force=True)
-        q = payload.get('query', '') if isinstance(payload, dict) else ''
-        lang = payload.get('lang', 'English') if isinstance(payload, dict) else 'English'
+    def do_POST(self):
+        try:
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            payload = json.loads(post_data.decode('utf-8'))
 
-        # Parse query
-        location, state, year, query_type = extract_location_and_year(q)
+            q = payload.get('query', '')
+            lang = payload.get('lang', 'English')
 
-        response = {
-            'query': q,
-            'location': location,
-            'state': state,
-            'year': year,
-            'query_type': query_type,
-            'graph': None,
-            'answer': None
-        }
+            # Parse query
+            location, state, year, query_type = extract_location_and_year(q)
 
-        # Handle visualization requests
-        if query_type in ['category_bar', 'trend']:
-            viz_response = generate_visualization_response(query_type, state, location, year)
-            if viz_response:
-                response.update(viz_response)
-                return jsonify(response), 200, {
-                    'Access-Control-Allow-Origin': '*',
-                    'Content-Type': 'application/json'
-                }
+            response = {
+                'query': q,
+                'location': location,
+                'state': state,
+                'year': year,
+                'query_type': query_type,
+                'graph': None,
+                'answer': None
+            }
 
-        # Handle data queries
-        if location and year:
-            record = find_record(location, state, year)
-            if record:
-                response['answer'] = format_groundwater_response(record)
+            # Handle visualization requests
+            if query_type in ['category_bar', 'trend']:
+                viz_response = generate_visualization_response(query_type, state, location, year)
+                if viz_response:
+                    response.update(viz_response)
             else:
-                response['answer'] = f"No data found for {location} in {year}. Please check the location name and year."
-        else:
-            response['answer'] = "Please specify a location and year in your query. Example: 'Show data for Delhi 2024'"
+                # Handle data queries
+                if location and year:
+                    record = find_record(location, state, year)
+                    if record:
+                        response['answer'] = format_groundwater_response(record)
+                    else:
+                        response['answer'] = f"No data found for {location} in {year}. Please check the location name and year."
+                else:
+                    response['answer'] = "Please specify a location and year in your query. Example: 'Show data for Delhi 2024'"
 
-        return jsonify(response), 200, {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        }
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(response).encode('utf-8'))
 
-    except Exception as e:
-        return jsonify({
-            'error': str(e),
-            'answer': f'Error processing query: {str(e)}'
-        }), 500, {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-        }
+        except Exception as e:
+            error_response = {
+                'error': str(e),
+                'answer': f'Error processing query: {str(e)}'
+            }
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps(error_response).encode('utf-8'))
 
-# For Vercel
-app = Flask(__name__)
-
-@app.route('/', defaults={'path': ''}, methods=['GET', 'POST', 'OPTIONS'])
-@app.route('/<path:path>', methods=['GET', 'POST', 'OPTIONS'])
-def catch_all(path):
-    return handler(request)
+    def do_GET(self):
+        response = {'status': 'ok', 'message': 'Query API is running'}
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode('utf-8'))
