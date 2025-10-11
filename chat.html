@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HydroLens</title>
   <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="dark">
   <div class="chat-container">
@@ -142,6 +143,174 @@
         return wrapper;
       }
 
+      function addChartMessage(role, chartData, caption){
+        const wrapper = document.createElement('div');
+        wrapper.className = 'message ' + (role === 'user' ? 'user-msg right' : 'bot-msg left');
+        wrapper.style.display = 'inline-block';
+        wrapper.style.maxWidth = '72%';
+        wrapper.style.padding = '10px';
+        wrapper.style.borderRadius = '12px';
+        wrapper.style.margin = '8px 0';
+        wrapper.style.boxShadow = '0 4px 10px rgba(0,0,0,0.25)';
+        wrapper.style.backgroundColor = '#2a1810';
+        wrapper.style.alignSelf = 'flex-start';
+        wrapper.style.textAlign = 'left';
+        wrapper.style.marginRight = '20%';
+        wrapper.style.marginLeft = '12px';
+
+        const canvas = document.createElement('canvas');
+        canvas.style.maxWidth = '100%';
+        canvas.style.borderRadius = '8px';
+        wrapper.appendChild(canvas);
+
+        const cap = document.createElement('div');
+        cap.textContent = caption || '';
+        cap.style.marginTop = '6px';
+        cap.style.fontSize = '13px';
+        cap.style.color = '#ffffff';
+        cap.style.fontStyle = 'italic';
+        if(caption) wrapper.appendChild(cap);
+
+        chatMessages.appendChild(wrapper);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Create chart
+        new Chart(canvas, chartData);
+        return wrapper;
+      }
+
+      function generateTrendChart(location, state, year){
+        // Filter metadata for the location/state
+        const filtered = entries.filter(e => {
+          const matchState = !state || e.normState === normalize(state);
+          const matchLoc = !location || e.normLocation.includes(normalize(location)) || normalize(location).includes(e.normLocation);
+          return matchState && matchLoc;
+        });
+
+        if(filtered.length === 0) return null;
+
+        // Sort by year
+        filtered.sort((a,b) => a.yearRaw.localeCompare(b.yearRaw));
+
+        const years = filtered.map(e => e.yearRaw);
+        const extraction = filtered.map(e => e.props.ground_water_extraction_ham || 0);
+        const extractable = filtered.map(e => e.props.annual_extractable_ground_water_resources_ham || 0);
+
+        return {
+          type: 'line',
+          data: {
+            labels: years,
+            datasets: [{
+              label: 'Groundwater Extraction (ha m)',
+              data: extraction,
+              borderColor: '#2E86AB',
+              backgroundColor: 'rgba(46, 134, 171, 0.1)',
+              tension: 0.4,
+              fill: true
+            }, {
+              label: 'Extractable Resources (ha m)',
+              data: extractable,
+              borderColor: '#A23B72',
+              backgroundColor: 'rgba(162, 59, 114, 0.1)',
+              borderDash: [5, 5],
+              tension: 0.4,
+              fill: false
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: `Groundwater Trend: ${state || location || 'Selected Area'}`,
+                color: '#ffffff',
+                font: { size: 16 }
+              },
+              legend: {
+                labels: { color: '#ffffff' }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#ffffff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+              },
+              x: {
+                ticks: { color: '#ffffff' },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+              }
+            }
+          }
+        };
+      }
+
+      function generateCategoryChart(location, state, year){
+        // Filter for specific year and state/location
+        const filtered = entries.filter(e => {
+          const matchState = !state || e.normState === normalize(state);
+          const matchLoc = !location || e.normLocation.includes(normalize(location)) || normalize(location).includes(e.normLocation);
+          const matchYear = !year || e.yearRaw.includes(year);
+          return matchState && matchLoc && matchYear;
+        });
+
+        if(filtered.length === 0) return null;
+
+        // Count categories
+        const categories = {};
+        filtered.forEach(e => {
+          const cat = e.props.approx_category || 'N/A';
+          categories[cat] = (categories[cat] || 0) + 1;
+        });
+
+        const colorMap = {
+          'Safe': '#2ECC71',
+          'Semi-Critical': '#F39C12',
+          'Critical': '#E74C3C',
+          'Over-Exploited': '#C0392B',
+          'N/A': '#95A5A6'
+        };
+
+        return {
+          type: 'bar',
+          data: {
+            labels: Object.keys(categories),
+            datasets: [{
+              label: 'Number of Locations',
+              data: Object.values(categories),
+              backgroundColor: Object.keys(categories).map(cat => colorMap[cat] || '#95A5A6'),
+              borderColor: '#000',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: `Category Distribution: ${state || location || 'Selected Area'} (${year || 'All Years'})`,
+                color: '#ffffff',
+                font: { size: 16 }
+              },
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#ffffff', stepSize: 1 },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+              },
+              x: {
+                ticks: { color: '#ffffff' },
+                grid: { display: false }
+              }
+            }
+          }
+        };
+      }
+
       function normalize(s){
         return (s||'').toString().toUpperCase().replace(/[\W_]+/g,' ').trim();
       }
@@ -253,44 +422,59 @@
         const q = text.trim();
         if(!q) return addMessage('bot', t('please_type'));
 
-        // Graph/visualization intent
+        // Graph/visualization intent - Generate charts locally with Chart.js
         try{
           const graphPattern = /\b(generate|plot|graph|visuali(?:se|ze)|show|display|chart|trend|category|bar)\b/i;
           if(graphPattern.test(q)){
-            addMessage('bot', 'Processing your query...');
-            console.log('Calling /api/query with:', { query: q, lang: lang });
+            addMessage('bot', 'Generating visualization...');
 
-            fetch('/api/query', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ query: q, lang: lang })
-            }).then(async res => {
-              console.log('API Response status:', res.status);
-              if(!res.ok){
-                const txt = await res.text();
-                console.error('Server error:', res.status, txt);
-                addMessage('bot', '⚠️ API Error: ' + res.status + '\n\nThe serverless function may still be deploying. Please wait 1-2 minutes and try again, or check the location-based search below.');
-                return;
-              }
-              const j = await res.json();
-              console.log('API Response:', j);
+            // Parse location, state, year from query
+            const yearMatch = q.match(/\b(\d{4}(?:-\d{2,4})?)\b/);
+            const year = yearMatch ? yearMatch[1] : null;
 
-              if(j.graph){
-                let graphUrl = j.graph;
-                if(j.answer) addMessage('bot', j.answer);
-                addImageMessage('bot', graphUrl + '?t=' + Date.now(), 'Groundwater Visualization');
-              } else if(j.answer){
-                addMessage('bot', j.answer);
-              } else {
-                addMessage('bot', 'No visualization returned.');
+            let queryClean = q.toLowerCase();
+            if(year) queryClean = queryClean.replace(year, '');
+
+            // Remove common words to extract location
+            const removeWords = /\b(generate|plot|graph|show|display|trend|category|bar|chart|for|in|of|the|visuali[sz]e|visualization)\b/gi;
+            queryClean = queryClean.replace(removeWords, '').trim();
+
+            const location = queryClean || null;
+            let state = null;
+
+            // Try to find matching state
+            if(location){
+              const locNorm = normalize(location);
+              for(const e of entries){
+                if(e.normState === locNorm || e.normLocation.includes(locNorm)){
+                  state = e.stateRaw;
+                  break;
+                }
               }
-            }).catch(err=>{
-              console.error('API fetch error:', err);
-              addMessage('bot', '⚠️ Could not reach API endpoint.\n\nThis may happen if:\n• Vercel is still deploying (wait 1-2 minutes)\n• The API function needs to cold-start (try again)\n\nYou can still use location-based search below!');
-            });
+            }
+
+            // Determine chart type
+            const isCategoryChart = /\b(category|categories|bar|distribution)\b/i.test(q);
+
+            let chartData = null;
+            if(isCategoryChart){
+              chartData = generateCategoryChart(location, state, year);
+            } else {
+              chartData = generateTrendChart(location, state, year);
+            }
+
+            if(chartData){
+              const chartType = isCategoryChart ? 'Category Distribution' : 'Trend';
+              addChartMessage('bot', chartData, `📊 ${chartType} for ${state || location || 'Selected Area'}`);
+            } else {
+              addMessage('bot', `No data found for ${location || state || 'the specified area'}. Try a different location or year.`);
+            }
             return;
           }
-        }catch(e){ console.error('Graph intent detection error', e); }
+        }catch(e){
+          console.error('Graph generation error', e);
+          addMessage('bot', 'Error generating visualization. Please try a different query.');
+        }
 
         if(q.toLowerCase() === 'help'){
           return addMessage('bot', t('help_hint'));
