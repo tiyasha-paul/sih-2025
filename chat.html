@@ -46,32 +46,11 @@
     </main>
   </div>
   <script>
-    // Auto-start Flask server when chat page loads
-    (async function() {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/', { method: 'GET' });
-        if (response.ok) {
-          console.log('✓ Server is running');
-        }
-      } catch (error) {
-        console.log('Starting server automatically...');
-        // Start server silently
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = 'server-autostart.vbs';
-        document.body.appendChild(iframe);
-
-        // Show notification
-        const notice = document.createElement('div');
-        notice.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#2a1810;color:#ffffff;padding:12px 24px;border-radius:8px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
-        notice.textContent = '🌊 Starting HydroLens server... Please wait';
-        document.body.appendChild(notice);
-        setTimeout(() => notice.remove(), 8000);
-      }
-    })();
+    // HydroLens now runs on Vercel serverless - no local server needed!
+    console.log('✓ HydroLens serverless backend is ready');
 
     (function(){
-      const dataUrl = './CHAT/metadata.json';
+      const dataUrl = '/api/metadata';
       const chatMessages = document.getElementById('chatMessages');
       if(chatMessages){
         chatMessages.style.display = 'flex';
@@ -278,22 +257,21 @@
         try{
           const graphPattern = /\b(generate|plot|graph|visuali(?:se|ze)|show|display|chart|trend|category|bar)\b/i;
           if(graphPattern.test(q)){
-            addMessage('bot', 'Generating visualization...');
-            fetch('http://127.0.0.1:5000/api/query', {
+            addMessage('bot', 'Processing your query...');
+            fetch('/api/query', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ query: q, lang: lang })
             }).then(async res => {
               if(!res.ok){
                 const txt = await res.text();
-                addMessage('bot', 'Server error: ' + res.status + '. Make sure the Flask server is running.');
+                addMessage('bot', 'Server error: ' + res.status);
                 console.error('Server error:', res.status, txt);
                 return;
               }
               const j = await res.json();
               if(j.graph){
                 let graphUrl = j.graph;
-                if(graphUrl.startsWith('/')) graphUrl = 'http://127.0.0.1:5000' + graphUrl;
                 if(j.answer) addMessage('bot', j.answer);
                 addImageMessage('bot', graphUrl + '?t=' + Date.now(), 'Groundwater Visualization');
               } else if(j.answer){
@@ -303,7 +281,7 @@
               }
             }).catch(err=>{
               console.error('API fetch error', err);
-              addMessage('bot', 'Error contacting visualization server.');
+              addMessage('bot', 'Error contacting server.');
             });
             return;
           }

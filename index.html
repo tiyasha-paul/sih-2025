@@ -66,44 +66,8 @@
 
   <script src="script.js"></script>
   <script>
-    // Auto-start Flask server when page loads
-    (function() {
-      async function checkAndStartServer() {
-        try {
-          // Check if server is already running
-          const response = await fetch('http://127.0.0.1:5000/', { method: 'GET', mode: 'no-cors' });
-          console.log('✓ HydroLens server is running');
-        } catch (error) {
-          // Server not running, attempt to start it
-          console.log('Server not detected, attempting auto-start...');
-
-          // Try to start server by calling the VBS script
-          try {
-            const startScript = document.createElement('iframe');
-            startScript.style.display = 'none';
-            startScript.src = 'server-autostart.vbs';
-            document.body.appendChild(startScript);
-
-            console.log('✓ Server auto-start initiated');
-
-            // Show user notification
-            const notification = document.createElement('div');
-            notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#4CAF50;color:white;padding:15px 25px;border-radius:8px;z-index:10000;box-shadow:0 4px 8px rgba(0,0,0,0.2);font-family:Arial,sans-serif;';
-            notification.innerHTML = '🌊 Starting HydroLens server...<br><small>Please wait a moment</small>';
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-              notification.remove();
-            }, 8000);
-          } catch (e) {
-            console.warn('Could not auto-start server:', e);
-          }
-        }
-      }
-
-      // Run on page load
-      window.addEventListener('load', checkAndStartServer);
-    })();
+    // HydroLens now runs on serverless - no local server needed!
+    console.log('✓ HydroLens is running on Vercel serverless functions');
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
